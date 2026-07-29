@@ -1,106 +1,161 @@
-import type { LucideIcon } from "lucide-react";
 import {
-  Award,
-  Play,
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  Monitor,
   Sparkles,
-  Square,
-  Video,
-  WandSparkles,
 } from "lucide-react";
 
-type Especialidad = {
-  titulo: string;
-  descripcion: string;
-  icono: LucideIcon;
-};
-
-const especialidades: Especialidad[] = [
-  {
-    titulo: "Maquillaje Profesional",
-    descripcion:
-      "Social, novias, editorial y caracterización con técnica de pasarela.",
-    icono: WandSparkles,
-  },
-  {
-    titulo: "Cosmetología Integral",
-    descripcion:
-      "Faciales, limpieza profunda, aparatología y protocolos de piel.",
-    icono: Sparkles,
-  },
-  {
-    titulo: "Uñas & Nail Art",
-    descripcion:
-      "Acrílico, gel, esculpido y diseño artístico avanzado.",
-    icono: Award,
-  },
-  {
-    titulo: "Cosmiatría",
-    descripcion:
-      "Tratamientos corporales, radiofrecuencia y cuidado avanzado.",
-    icono: Square,
-  },
-  {
-    titulo: "Peinados & Colorimetría",
-    descripcion:
-      "Recogidos, ondas, balayage y teoría del color aplicada.",
-    icono: Video,
-  },
-  {
-    titulo: "Micropigmentación",
-    descripcion:
-      "Cejas, labios y delineado con técnicas semipermanentes.",
-    icono: Play,
-  },
-];
-
-const Especialidadseccion = () => {
+function Especialidadseccion() {
   return (
-    <section className="min-h-screen w-full border-t border-[#d4af37]/15 bg-[#090908] px-5 py-10 text-white md:px-8">
-      <div className="mx-auto w-full max-w-[1450px]">
+    <section
+      id="especialidades"
+      aria-labelledby="especialidades-heading"
+      className="relative overflow-hidden bg-[#090909] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24"
+    >
+      {/* Decoración de fondo */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden="true"
+      >
+        <div className="absolute -left-28 top-10 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
+
+        <div className="absolute -right-28 bottom-10 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-6xl">
         {/* Encabezado */}
-        <header className="mb-12 text-center md:mb-16">
-          <span className="mb-2 block text-xs font-semibold tracking-[0.3em] text-[#d4af37] md:text-sm">
-            LO QUE PUEDES ESTUDIAR
-          </span>
-
-          <h1 className="font-serif text-4xl font-bold leading-tight text-[#f8f3e9] md:text-6xl">
-            Especialidades
-          </h1>
-
-          <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-[#c8ba91] md:text-xl">
-            Programas diseñados para el mundo real, con salida laboral
-            inmediata.
+        <header className="mx-auto mb-10 max-w-3xl text-center sm:mb-12">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-400 sm:text-sm">
+            Formación especializada
           </p>
+
+          <h2
+            id="especialidades-heading"
+            className="mt-3 font-serif text-4xl font-bold leading-tight text-[#f7f1e8] sm:text-5xl lg:text-6xl"
+          >
+            Nuestras Especialidades
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-neutral-400 sm:text-base">
+            Conoce nuestra oferta de especializaciones profesionales en
+            belleza, estética facial, corporal y técnicas avanzadas.
+          </p>
+
+          <div
+            className="mx-auto mt-5 flex max-w-xs items-center justify-center gap-3"
+            aria-hidden="true"
+          >
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-amber-500/60" />
+
+            <span className="h-2 w-2 rotate-45 bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.8)]" />
+
+            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-500/60" />
+          </div>
         </header>
 
-        {/* Tarjetas */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {especialidades.map((especialidad) => {
-            const Icono = especialidad.icono;
+        {/* Única tarjeta */}
+        <article className="mx-auto max-w-5xl">
+          <a
+            href="/especialidades"
+            aria-label="Ingresar a todas nuestras especialidades"
+            className="group relative block min-h-[430px] overflow-hidden rounded-[30px] border border-amber-500/40 bg-[#111111] shadow-[0_24px_70px_rgba(0,0,0,0.55)] outline-none transition duration-500 hover:-translate-y-2 hover:border-amber-400/80 hover:shadow-[0_30px_80px_rgba(212,175,55,0.18)] focus-visible:ring-4 focus-visible:ring-amber-400/60 sm:min-h-[460px]"
+          >
+            {/* Fondo principal */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#9a5700] via-[#21170d] to-black" />
 
-            return (
-              <article
-                key={especialidad.titulo}
-                className="group min-h-[265px] rounded-[22px] border border-[#d4af37]/20 bg-[#161510] px-8 py-9 transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/60 hover:shadow-[0_18px_45px_rgba(0,0,0,0.45)]"
-              >
-                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#302713] text-[#e8c64e] transition duration-300 group-hover:bg-[#3b3018]">
-                  <Icono size={23} strokeWidth={1.7} />
+            {/* Brillo decorativo */}
+            <div
+              className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-amber-400/20 blur-3xl transition-transform duration-700 group-hover:-translate-x-10 group-hover:translate-y-10"
+              aria-hidden="true"
+            />
+
+            <div
+              className="absolute -bottom-28 -left-20 h-80 w-80 rounded-full bg-white/10 blur-3xl transition-transform duration-700 group-hover:translate-x-10 group-hover:-translate-y-8"
+              aria-hidden="true"
+            />
+
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/25"
+              aria-hidden="true"
+            />
+
+            {/* Contenido */}
+            <div className="relative z-10 flex min-h-[430px] flex-col justify-between p-6 sm:min-h-[460px] sm:p-9 lg:p-12">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-amber-400/50 bg-black/60 text-amber-400 shadow-[0_0_28px_rgba(212,175,55,0.16)] backdrop-blur-md sm:h-16 sm:w-16">
+                  <GraduationCap
+                    className="h-7 w-7 sm:h-8 sm:w-8"
+                    aria-hidden="true"
+                  />
                 </div>
 
-                <h2 className="mb-3 font-serif text-2xl font-bold leading-tight text-[#fff9eb]">
-                  {especialidad.titulo}
-                </h2>
+                <span className="rounded-full border border-amber-400/40 bg-black/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-amber-300 backdrop-blur-md sm:text-sm">
+                  Inscripciones abiertas
+                </span>
+              </div>
 
-                <p className="max-w-sm text-base leading-7 text-[#c5b58c] md:text-lg">
-                  {especialidad.descripcion}
+              <div className="mt-10 max-w-3xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400 sm:text-sm">
+                  Formación profesional
                 </p>
-              </article>
-            );
-          })}
-        </div>
+
+                <h3 className="mt-3 font-serif text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                  Nuestras Especialidades
+                </h3>
+
+                <p className="mt-5 max-w-2xl text-sm leading-7 text-neutral-300 sm:text-base lg:text-lg">
+                  Explora nuestros programas de Postoperatorio,
+                  Electroestética, Cejas y Pestañas, Estética Facial,
+                  Estética Corporal, Microneedling, Química Cosmética y
+                  muchas especialidades más.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-neutral-200 sm:text-sm">
+                    <BookOpen
+                      className="h-4 w-4 text-amber-400"
+                      aria-hidden="true"
+                    />
+                    12 especialidades
+                  </span>
+
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-neutral-200 sm:text-sm">
+                    <Monitor
+                      className="h-4 w-4 text-amber-400"
+                      aria-hidden="true"
+                    />
+                    Online y presencial
+                  </span>
+
+                  <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-300 sm:text-sm">
+                    <Sparkles
+                      className="h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    Cupos limitados
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-10 flex items-center justify-between border-t border-white/10 pt-6">
+                <span className="text-sm font-semibold text-white sm:text-base">
+                  Conocer todas las especialidades
+                </span>
+
+                <span className="flex h-12 w-12 items-center justify-center rounded-full border border-amber-400/50 bg-black/60 text-amber-400 transition duration-300 group-hover:translate-x-1 group-hover:border-amber-300 group-hover:bg-amber-400 group-hover:text-black">
+                  <ArrowRight
+                    className="h-5 w-5"
+                    aria-hidden="true"
+                  />
+                </span>
+              </div>
+            </div>
+          </a>
+        </article>
       </div>
     </section>
   );
-};
+}
 
 export default Especialidadseccion;
