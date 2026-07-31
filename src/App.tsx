@@ -1,23 +1,17 @@
-import Especialidadseccion from "./features/page/sections/Especialidadseccion";
-import Certificaciones from "./features/page/sections/Certificaciones";
-import Docentes from "./features/page/Docentes";
-import Testimonio from "./features/page/sections/Testimonios"; 
-import PreguntasFrecuentes from "./features/page/sections/PreguntasFrecuentes";
-import Cursos from "./features/page/sections/Cursos";
-
+import { RouterProvider } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css";
+import { router } from "./routes/router";
 
 function App() {
   return (
-    <main>
-      <Certificaciones />
-      <Especialidadseccion />
-      <Cursos />
-      <Docentes />
-      <Testimonio />  
-      <PreguntasFrecuentes />
-      
-    </main>
-  );
+    <>
+      <div className="overflow-auto">
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </div>
+    </>
+  )
 }
 
-export default App;
+export default App
