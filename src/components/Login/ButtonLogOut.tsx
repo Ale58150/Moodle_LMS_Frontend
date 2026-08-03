@@ -1,14 +1,23 @@
-
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import {
     Tooltip,
-    TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useLogout } from "@/features/Auth/Hook/AuthHook";
+import { useNavigate } from "react-router-dom";
 
 function ButtonLogOut() {
+    const logoutMutation = useLogout();
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        logoutMutation.mutate(undefined, {
+            onSuccess: () => {
+                navigate("/login");
+            }
+        });
+    };
 
     return (
         <TooltipProvider delayDuration={150}>
@@ -18,23 +27,14 @@ function ButtonLogOut() {
                         type="button"
                         variant="ghost"
                         size="icon"
+                        onClick={handleLogout}
+                        disabled={logoutMutation.isPending}
                         className="
-               self-center
-              bg-neutral-100 dark:bg-neutral-800
-              text-neutral-700 dark:text-neutral-200
-              hover:bg-red-100 hover:text-red-600
-              dark:hover:bg-red-900/30 dark:hover:text-red-400 shadow-sm transition-all duration-200
-            "
+                            self-center bg-muted text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 shadow-sm"
                     >
                         <LogOut className="h-5 w-5" />
                     </Button>
                 </TooltipTrigger>
-                <TooltipContent
-                    side="right"
-                    className="text-sm font-medium bg-neutral-800 text-white border border-neutral-700"
-                >
-                    <p>Salir</p>
-                </TooltipContent>
             </Tooltip>
         </TooltipProvider>
     );
