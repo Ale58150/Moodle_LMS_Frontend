@@ -1,7 +1,10 @@
 import { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
+
 import RootLayout from "@/layouts/RootLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import { ProtectedRoute } from "@/components/Login/ProtectedRoute";
+import { AuthPage } from "@/pages/AuthPage"
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -11,7 +14,6 @@ const Inicio = () => (
         <p>Página de prueba.</p>
     </div>
 );
-
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -22,15 +24,24 @@ export const router = createBrowserRouter([
         ),
         children: [
             {
-                element: (
-                    <Suspense fallback={<Loading />}>
-                        <DashboardLayout />
-                    </Suspense>
-                ),
+                path: "login",
+                element: <AuthPage />,
+            },
+            {
+                element: <ProtectedRoute />,
                 children: [
                     {
-                        index: true,
-                        element: <Inicio />,
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <DashboardLayout />
+                            </Suspense>
+                        ),
+                        children: [
+                            {
+                                path: "inicio",
+                                element: <Inicio />,
+                            },
+                        ],
                     },
                 ],
             },
