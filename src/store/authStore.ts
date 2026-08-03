@@ -1,35 +1,38 @@
 import { create } from "zustand";
+import { LoginResponseType } from "@/features/Auth/Schema/AuthSchema";
 
-interface Usuario {
-    id_usuario: number;
-    nombre: string;
-    apellido_paterno: string;
-    correo: string;
-    estado: number;
-}
+type Usuario = LoginResponseType["usuario"];
+type Menu = LoginResponseType["menu"];
 
 interface AuthState {
     token: string | null;
     usuario: Usuario | null;
-    login: (token: string, usuario: Usuario) => void;
+    rol: string | null;
+    menu: Menu | null;
+    login: (data: LoginResponseType) => void;
     logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
     token: localStorage.getItem("token"),
     usuario: JSON.parse(localStorage.getItem("usuario") || "null"),
-
-    login: (token, usuario) => {
-
+    rol: localStorage.getItem("rol"),
+    menu: JSON.parse(localStorage.getItem("menu") || "null"),
+    login: (data) => {
+        const { token, usuario, rol, menu } = data;
         localStorage.setItem("token", token);
         localStorage.setItem(
             "usuario",
             JSON.stringify(usuario)
         );
+        localStorage.setItem("rol", rol);
+        localStorage.setItem("menu", JSON.stringify(menu));
 
         set({
             token,
-            usuario
+            usuario,
+            rol,
+            menu,
         });
     },
 
@@ -37,10 +40,13 @@ export const useAuthStore = create<AuthState>((set) => ({
 
         localStorage.removeItem("token");
         localStorage.removeItem("usuario");
-
+        localStorage.removeItem("rol");
+        localStorage.removeItem("menu");
         set({
             token: null,
-            usuario: null
+            usuario: null,
+            rol: null,
+            menu: null,
         });
     }
 }));
