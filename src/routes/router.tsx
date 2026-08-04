@@ -4,7 +4,9 @@ import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "@/layouts/RootLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { ProtectedRoute } from "@/components/Login/ProtectedRoute";
-import { AuthPage } from "@/pages/AuthPage"
+import { AuthPage } from "@/pages/Auth/AuthPage";
+import { ChangePassword } from "@/pages/Auth/ChangePassword";
+import { ProfilePage } from "@/pages/Auth/MeProfile";
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -14,6 +16,7 @@ const Inicio = () => (
         <p>Página de prueba.</p>
     </div>
 );
+
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -31,6 +34,10 @@ export const router = createBrowserRouter([
                 element: <ProtectedRoute />,
                 children: [
                     {
+                        path: "cambiar-password",
+                        element: <ChangePassword />,
+                    },
+                    {
                         element: (
                             <Suspense fallback={<Loading />}>
                                 <DashboardLayout />
@@ -40,6 +47,10 @@ export const router = createBrowserRouter([
                             {
                                 path: "inicio",
                                 element: <Inicio />,
+                            },
+                            {
+                                path: "perfil",
+                                element: <ProfilePage />
                             },
                         ],
                     },

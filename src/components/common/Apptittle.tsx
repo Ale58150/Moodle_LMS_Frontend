@@ -1,6 +1,6 @@
 interface AppTitleProps {
     title: string;
-    subtitle: string;
+    subtitle?: string;
 }
 
 export function AppTitle({ title, subtitle }: AppTitleProps) {
