@@ -7,6 +7,7 @@ import { ProtectedRoute } from "@/components/Login/ProtectedRoute";
 import { AuthPage } from "@/pages/Auth/AuthPage";
 import { ChangePassword } from "@/pages/Auth/ChangePassword";
 import { ProfilePage } from "@/pages/Auth/MeProfile";
+import UsuarioPage from "@/pages/Usuario/UsuarioPage";
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
                             {
                                 path: "perfil",
                                 element: <ProfilePage />
+                            },
+                            {
+                                path: "usuario",
+                                element: <UsuarioPage />
                             },
                         ],
                     },

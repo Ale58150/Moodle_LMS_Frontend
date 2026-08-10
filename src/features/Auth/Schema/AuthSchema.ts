@@ -17,6 +17,7 @@ export const LoginResponseSchema = z.object({
         estado: z.string(),
     }),
     rol: z.string(),
+    permisos: z.array(z.string()),
     menu: z.array(
         z.object({
             nombre: z.string(),
