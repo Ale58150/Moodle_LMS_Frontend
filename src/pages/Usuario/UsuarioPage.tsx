@@ -12,10 +12,11 @@ import {
 import { UsuarioType } from "@/features/Usuario/Schema/UsuarioSchema";
 import { usePermission } from "@/hooks/usePermission";
 import { PERMISSIONS } from "@/utils/constants";
+import { useNavigate } from "react-router-dom";
 
 export default function UsuarioPage() {
     const [page, setPage] = useState(1);
-
+    const navigate = useNavigate();
     const [selectedUser, setSelectedUser] =
         useState<UsuarioType | undefined>(undefined);
 
@@ -57,7 +58,9 @@ export default function UsuarioPage() {
     };
     const columns = UsuarioColumns({
         onEdit: handleEdit,
-
+        onView: (id: string) => {
+            navigate(`/usuario/${id}`);
+        },
         onDelete: handleDelete,
 
         canEdit: can(

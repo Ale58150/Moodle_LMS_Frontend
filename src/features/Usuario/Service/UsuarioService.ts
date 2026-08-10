@@ -9,21 +9,21 @@ export async function GetPaginatedUsers(page: number, perPage: number = 10): Pro
 }
 
 export async function GetUserById(id: string): Promise<{ success: boolean; data: UsuarioType }> {
-    const response = await apiService.get(`/usuarios/${id}`);
+    const response = await apiService.get(`/usuario/usuarios/${id}`);
     return response.data;
 }
 
 export async function CreateUser(data: UserCreateType): Promise<{ success: boolean; message: string; data: UsuarioType }> {
-    const response = await apiService.post("/usuarios/usuarios", data);
+    const response = await apiService.post("/usuario/usuarios", data);
     return response.data;
 }
 
 export async function UpdateUser(id: string, data: UserUpdateType): Promise<{ success: boolean; message: string; data: UsuarioType }> {
-    const response = await apiService.patch(`/usuarios/${id}`, data);
+    const response = await apiService.patch(`/usuario/usuarios/${id}`, data);
     return response.data;
 }
 
 export async function DeleteUserLogically(id: string): Promise<ResponseType> {
-    const response = await apiService.delete(`/usuarios/${id}`);
+    const response = await apiService.delete(`/usuario/usuarios/${id}`);
     return response.data;
 }

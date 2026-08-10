@@ -1,7 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import {
+    MoreHorizontal,
+    Pencil,
+    Trash2,
+    Eye,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,16 +21,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { UsuarioType } from "../Schema/UsuarioSchema";
-import { DialogUsuario } from "./DialogUsuario";
 
 interface UsuarioColumnsProps {
+    onEdit: (usuario: UsuarioType) => void;
     onDelete: (id: string) => void;
+    onView: (id: string) => void;
     canEdit: boolean;
     canDelete: boolean;
 }
 
 export function UsuarioColumns({
+    onEdit,
     onDelete,
+    onView,
     canEdit,
     canDelete,
 }: UsuarioColumnsProps): ColumnDef<UsuarioType>[] {
@@ -69,8 +77,11 @@ export function UsuarioColumns({
         {
             accessorKey: "telefono",
             header: "Teléfono",
-            cell: ({ row }) =>
-                row.original.telefono ?? "-",
+            cell: ({ row }) => (
+                <span>
+                    {row.original.telefono ?? "-"}
+                </span>
+            ),
         },
 
         {
@@ -97,6 +108,7 @@ export function UsuarioColumns({
         {
             id: "acciones",
             header: "Acciones",
+
             cell: ({ row }) => {
                 const usuario = row.original;
 
@@ -119,20 +131,23 @@ export function UsuarioColumns({
                             <DropdownMenuLabel>
                                 Acciones
                             </DropdownMenuLabel>
-
                             <DropdownMenuSeparator />
-
+                            <DropdownMenuItem
+                                onClick={() =>
+                                    onView(usuario.id_usuario)
+                                }
+                            >
+                                <Eye className="mr-2 h-4 w-4" />
+                                Ver usuario
+                            </DropdownMenuItem>
                             {canEdit && (
                                 <DropdownMenuItem
-                                    onSelect={(event) =>
-                                        event.preventDefault()
+                                    onClick={() =>
+                                        onEdit(usuario)
                                     }
-                                    asChild
                                 >
-                                    <DialogUsuario
-                                        mode="edit"
-                                        row={usuario}
-                                    />
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    Editar
                                 </DropdownMenuItem>
                             )}
                             {canDelete && (

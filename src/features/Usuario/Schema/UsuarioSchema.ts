@@ -17,6 +17,7 @@ export const UsuarioSchema = z.object({
     contacto_emergencia_nombre: z.string().nullable(),
     contacto_emergencia_telefono: z.string().nullable(),
     estado: z.string(),
+    rol: z.string(),
     created_at: z.string(),
     updated_at: z.string()
 });
