@@ -39,7 +39,7 @@ export default function UsuarioDetallePage() {
         );
     }
 
-    if (isError || !data?.data) {
+    if (isError || !data) {
         return (
             <div className="space-y-6">
                 <AppTitle title="Usuario" />
@@ -53,7 +53,7 @@ export default function UsuarioDetallePage() {
 
     return (
         <UsuarioDetalle
-            usuario={data.data}
+            usuario={data}
             onBack={() => navigate("/usuario")}
         />
     );

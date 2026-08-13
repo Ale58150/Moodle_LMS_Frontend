@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CreateUser, DeleteUserLogically, GetPaginatedUsers, GetUserById, SearchUsers, UpdateUser } from "../Service/UsuarioService";
-import { UserCreateType, UserUpdateType } from "../Schema/UsuarioSchema";
+import { UserCreateType } from "../Schema/UsuarioSchema";
 
 export function useGetUsers(page: number, limit: number = 10) {
     return useQuery({
@@ -11,14 +11,13 @@ export function useGetUsers(page: number, limit: number = 10) {
     });
 }
 
-export function useGetUser(id: string, enabled: boolean = true) {
+export function useGetUser(id: string, enabled = true) {
     return useQuery({
         queryKey: ["users", "detail", id],
         queryFn: () => GetUserById(id),
-        enabled: enabled && id != null,
+        enabled: enabled && !!id,
     });
 }
-
 export function useCreateUser() {
     const queryClient = useQueryClient();
 
