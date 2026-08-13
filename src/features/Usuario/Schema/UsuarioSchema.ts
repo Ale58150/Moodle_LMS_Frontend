@@ -76,3 +76,26 @@ export const UsuarioDetailSchema = z.object({
 });
 
 export type UsuarioDetailType = z.infer<typeof UsuarioDetailSchema>;
+
+export const UserUpdateSchema = z.object({
+    username: z.string().min(1, "El username es obligatorio"),
+    correo: z.string().email("Formato de correo inválido"),
+    estado: z.string().min(1, "El estado es obligatorio"),
+    nombre: z.string().min(1, "El nombre es obligatorio"),
+    apellidoPaterno: z.string().optional(),
+    apellidoMaterno: z.string().optional(),
+    telefono: z.string().optional(),
+    tipoDocumentoIdentidad: z.string().optional(),
+    numeroDocumento: z.string().optional(),
+    fechaNacimiento: z.string().optional(),
+    genero: z.string().optional(),
+    ciudad: z.string().optional(),
+    pais: z.string().optional(),
+    ocupacion: z.string().optional(),
+    contactoEmergenciaNombre: z.string().optional(),
+    contactoEmergenciaTelefono: z.string().optional(),
+    fotografiaRuta: z.string().optional(),
+    rolId: z.string().min(1, "Selecciona un rol"),
+});
+
+export type UserUpdateType = z.infer<typeof UserUpdateSchema>;

@@ -18,11 +18,10 @@ export async function CreateUser(data: UserCreateType): Promise<ResponseType> {
     return response.data;
 }
 
-export async function UpdateUser(id: string, data: UserUpdateType): Promise<{ success: boolean; message: string; data: UsuarioType }> {
-    const response = await apiService.patch(`/usuario/usuarios/${id}`, data);
+export async function UpdateUser(id: string, data: UserUpdateType): Promise<ResponseType> {
+    const response = await apiService.patch(`/user/${id}`, data);
     return response.data;
 }
-
 export async function DeleteUserLogically(id: string): Promise<ResponseType> {
     const response = await apiService.delete(`/user/${id}`);
     return response.data;

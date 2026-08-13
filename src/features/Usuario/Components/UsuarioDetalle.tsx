@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
     ArrowLeft,
     Mail,
@@ -9,8 +10,8 @@ import {
     Briefcase,
     IdCard,
     Shield,
+    Pencil,
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -19,8 +20,14 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { UsuarioDetailType } from "../Schema/UsuarioSchema";
+import { FormUsuario } from "./FormUsuario";
 
 interface UsuarioDetalleProps {
     usuario: UsuarioDetailType;
@@ -31,6 +38,8 @@ export function UsuarioDetalle({
     usuario,
     onBack,
 }: UsuarioDetalleProps) {
+    const [openEdit, setOpenEdit] = useState(false);
+
     const perfil = usuario.perfil;
 
     const nombreCompleto = [
@@ -45,28 +54,33 @@ export function UsuarioDetalle({
 
     return (
         <div className="space-y-6">
-            {/* HEADER */}
-            <div className="flex items-center gap-4">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={onBack}
-                >
-                    <ArrowLeft className="h-4 w-4" />
-                </Button>
+            <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={onBack}
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                    </Button>
 
-                <div>
-                    <h1 className="text-2xl font-semibold">
-                        Detalle del usuario
-                    </h1>
+                    <div>
+                        <h1 className="text-2xl font-semibold">
+                            Detalle del usuario
+                        </h1>
 
-                    <p className="text-sm text-muted-foreground">
-                        Información completa del usuario
-                    </p>
+                        <p className="text-sm text-muted-foreground">
+                            Información completa del usuario
+                        </p>
+                    </div>
                 </div>
+
+                <Button onClick={() => setOpenEdit(true)}>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Editar
+                </Button>
             </div>
 
-            {/* INFORMACIÓN PRINCIPAL */}
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>
@@ -92,8 +106,6 @@ export function UsuarioDetalle({
 
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                        {/* NOMBRE */}
                         <div className="flex gap-3">
                             <User className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -108,7 +120,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* USERNAME */}
                         <div className="flex gap-3">
                             <User className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -123,7 +134,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* CORREO */}
                         <div className="flex gap-3">
                             <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -138,7 +148,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* TELÉFONO */}
                         <div className="flex gap-3">
                             <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -153,7 +162,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* DOCUMENTO */}
                         <div className="flex gap-3">
                             <IdCard className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -173,7 +181,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* CIUDAD */}
                         <div className="flex gap-3">
                             <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -188,7 +195,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* PAÍS */}
                         <div className="flex gap-3">
                             <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -203,7 +209,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* OCUPACIÓN */}
                         <div className="flex gap-3">
                             <Briefcase className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -218,7 +223,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* ROL */}
                         <div className="flex gap-3">
                             <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -233,7 +237,6 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
-                        {/* CONTACTO EMERGENCIA */}
                         <div className="flex gap-3">
                             <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -253,12 +256,10 @@ export function UsuarioDetalle({
                                 )}
                             </div>
                         </div>
-
                     </div>
                 </CardContent>
             </Card>
 
-            {/* INFORMACIÓN ADICIONAL */}
             <Card>
                 <CardHeader>
                     <CardTitle>
@@ -268,8 +269,6 @@ export function UsuarioDetalle({
 
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                        {/* ID */}
                         <div>
                             <p className="text-sm text-muted-foreground">
                                 ID de usuario
@@ -280,7 +279,6 @@ export function UsuarioDetalle({
                             </p>
                         </div>
 
-                        {/* FECHA CREACIÓN */}
                         <div>
                             <p className="text-sm text-muted-foreground">
                                 Fecha de creación
@@ -295,7 +293,6 @@ export function UsuarioDetalle({
                             </p>
                         </div>
 
-                        {/* ACTUALIZACIÓN */}
                         <div>
                             <p className="text-sm text-muted-foreground">
                                 Última actualización
@@ -309,10 +306,30 @@ export function UsuarioDetalle({
                                     : "-"}
                             </p>
                         </div>
-
                     </div>
                 </CardContent>
             </Card>
+
+            <Dialog
+                open={openEdit}
+                onOpenChange={setOpenEdit}
+            >
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>
+                            Editar usuario
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <FormUsuario
+                        mode="edit"
+                        initialData={usuario}
+                        onSuccess={() => {
+                            setOpenEdit(false);
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

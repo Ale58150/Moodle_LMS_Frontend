@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CreateUser, DeleteUserLogically, GetPaginatedUsers, GetUserById, SearchUsers, UpdateUser } from "../Service/UsuarioService";
-import { UserCreateType } from "../Schema/UsuarioSchema";
+import { UserCreateType, UserUpdateType } from "../Schema/UsuarioSchema";
 
 export function useGetUsers(page: number, limit: number = 10) {
     return useQuery({
@@ -46,18 +46,36 @@ export function useUpdateUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ id, data }: { id: string; data: UserUpdateType }) => UpdateUser(id, data),
+        mutationFn: ({
+            id,
+            data,
+        }: {
+            id: string;
+            data: UserUpdateType;
+        }) => UpdateUser(id, data),
+
         onSuccess: (response, variables) => {
-            toast.success(response.message || "Usuario actualizado con éxito");
-            queryClient.invalidateQueries({ queryKey: ["users", "list"] });
-            queryClient.invalidateQueries({ queryKey: ["users", "detail", variables.id] });
+            toast.success(
+                response.message ||
+                "Usuario actualizado con éxito"
+            );
+
+            queryClient.invalidateQueries({
+                queryKey: ["users", "list"],
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["users", "detail", variables.id],
+            });
         },
+
         onError: () => {
-            toast.error("Error al procesar la solicitud de actualización");
-        }
+            toast.error(
+                "Error al procesar la solicitud de actualización"
+            );
+        },
     });
 }
-
 export function useDeleteUser() {
     const queryClient = useQueryClient();
 
