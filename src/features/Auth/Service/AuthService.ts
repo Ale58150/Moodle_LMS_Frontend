@@ -4,7 +4,7 @@ import { ResponseType } from "@/utils/Schema/Response";
 
 export async function LoginUser(data: AuthSchemaType): Promise<LoginResponseType> {
     const response = await apiService.post("/auth/login", data);
-    return response.data.data;
+    return response.data;
 }
 
 export async function LogoutUser() {

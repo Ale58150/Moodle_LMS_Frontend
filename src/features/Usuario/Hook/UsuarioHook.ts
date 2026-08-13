@@ -1,0 +1,66 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { CreateUser, DeleteUserLogically, GetPaginatedUsers, GetUserById, UpdateUser } from "../Service/UsuarioService";
+import { UserCreateType, UserUpdateType } from "../Schema/UsuarioSchema";
+
+export function useGetUsers(page: number, perPage: number = 10) {
+    return useQuery({
+        queryKey: ["users", "list", page, perPage],
+        queryFn: () => GetPaginatedUsers(page, perPage),
+        staleTime: 1000 * 60 * 2,
+    });
+}
+
+export function useGetUser(id: string, enabled: boolean = true) {
+    return useQuery({
+        queryKey: ["users", "detail", id],
+        queryFn: () => GetUserById(id),
+        enabled: enabled && id != null,
+    });
+}
+
+export function useCreateUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: UserCreateType) => CreateUser(data),
+        onSuccess: (response) => {
+            toast.success(response.message || "Usuario creado con éxito");
+            queryClient.invalidateQueries({ queryKey: ["users", "list"] });
+        },
+        onError: () => {
+            toast.error("Error al procesar la solicitud de creación");
+        }
+    });
+}
+
+export function useUpdateUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ id, data }: { id: string; data: UserUpdateType }) => UpdateUser(id, data),
+        onSuccess: (response, variables) => {
+            toast.success(response.message || "Usuario actualizado con éxito");
+            queryClient.invalidateQueries({ queryKey: ["users", "list"] });
+            queryClient.invalidateQueries({ queryKey: ["users", "detail", variables.id] });
+        },
+        onError: () => {
+            toast.error("Error al procesar la solicitud de actualización");
+        }
+    });
+}
+
+export function useDeleteUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: string) => DeleteUserLogically(id),
+        onSuccess: (response) => {
+            toast.success(response.message || "Usuario dado de baja con éxito");
+            queryClient.invalidateQueries({ queryKey: ["users", "list"] });
+        },
+        onError: () => {
+            toast.error("Error al intentar dar de baja al usuario");
+        }
+    });
+}

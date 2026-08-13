@@ -1,25 +1,66 @@
-import { Navigate, Outlet } from "react-router-dom";
+import {
+    Navigate,
+    Outlet,
+    useLocation,
+} from "react-router-dom";
+
 import { useAuthStore } from "@/store/authStore";
 
 interface ProtectedRouteProps {
     allowedRoles?: string[];
 }
 
-export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
-    const token = useAuthStore((state) => state.token);
-    const rol = useAuthStore((state) => state.rol);
-    const usuario = useAuthStore((state) => state.usuario);
+export function ProtectedRoute({
+    allowedRoles,
+}: ProtectedRouteProps) {
+    const token = useAuthStore(
+        (state) => state.token
+    );
+
+    const rol = useAuthStore(
+        (state) => state.rol
+    );
+
+    const usuario = useAuthStore(
+        (state) => state.usuario
+    );
+
+    const location = useLocation();
 
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return (
+            <Navigate
+                to="/login"
+                replace
+            />
+        );
     }
 
-    if (usuario?.estado === "pendiente") {
-        return <Navigate to="/cambiar-password" replace />;
+    const estaCambiandoPassword =
+        location.pathname === "/cambiar-password";
+
+    if (
+        usuario?.estado === "pendiente" &&
+        !estaCambiandoPassword
+    ) {
+        return (
+            <Navigate
+                to="/cambiar-password"
+                replace
+            />
+        );
     }
 
-    if (allowedRoles && !allowedRoles.includes(rol || "")) {
-        return <Navigate to="/inicio" replace />;
+    if (
+        allowedRoles &&
+        !rol.some((r) => allowedRoles.includes(r))
+    ) {
+        return (
+            <Navigate
+                to="/inicio"
+                replace
+            />
+        );
     }
 
     return <Outlet />;

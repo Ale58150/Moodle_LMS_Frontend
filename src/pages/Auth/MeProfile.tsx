@@ -1,4 +1,4 @@
-import { ProfileView } from "@/features/Auth/components/me_profile";
+import { ProfileView } from "@/features/Auth/Components/me_profile";
 
 export function ProfilePage() {
     return (
