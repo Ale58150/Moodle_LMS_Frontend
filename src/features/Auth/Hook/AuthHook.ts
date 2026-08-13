@@ -13,7 +13,7 @@ export function useLogin() {
     return useMutation({
         mutationFn: LoginUser,
         onSuccess: (response: LoginResponseType) => {
-            login(response)
+            login(response);
             if (response.usuario.estado === "pendiente") {
                 navigate("/cambiar-password");
                 return;
@@ -23,7 +23,7 @@ export function useLogin() {
         },
         onError: () => {
             toast.error("Credenciales incorrectas");
-        }
+        },
     });
 }
 
