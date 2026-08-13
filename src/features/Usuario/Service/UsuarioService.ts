@@ -24,7 +24,7 @@ export async function UpdateUser(id: string, data: UserUpdateType): Promise<{ su
 }
 
 export async function DeleteUserLogically(id: string): Promise<ResponseType> {
-    const response = await apiService.delete(`/usuario/usuarios/${id}`);
+    const response = await apiService.delete(`/user/${id}`);
     return response.data;
 }
 
