@@ -7,15 +7,16 @@ export const ResponseSchema = z.object({
 
 export type ResponseType = z.infer<typeof ResponseSchema>;
 
-export function createPaginatedResponseSchema<T extends z.ZodTypeAny>(dataSchema: T) {
+export function createPaginatedResponseSchema<
+    T extends z.ZodTypeAny
+>(dataSchema: T) {
     return z.object({
-        success: z.boolean(),
         data: z.array(dataSchema),
-        pagination: z.object({
+        meta: z.object({
+            page: z.number(),
+            limit: z.number(),
             total: z.number(),
-            per_page: z.number(),
-            current_page: z.number(),
-            last_page: z.number()
-        })
+            totalPages: z.number(),
+        }),
     });
 }

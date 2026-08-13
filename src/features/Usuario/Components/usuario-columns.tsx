@@ -20,10 +20,10 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { UsuarioType } from "../Schema/UsuarioSchema";
+import { UsuarioIndexType } from "../Schema/UsuarioSchema";
 
 interface UsuarioColumnsProps {
-    onEdit: (usuario: UsuarioType) => void;
+    onEdit: (usuario: UsuarioIndexType) => void;
     onDelete: (id: string) => void;
     onView: (id: string) => void;
     canEdit: boolean;
@@ -36,27 +36,11 @@ export function UsuarioColumns({
     onView,
     canEdit,
     canDelete,
-}: UsuarioColumnsProps): ColumnDef<UsuarioType>[] {
+}: UsuarioColumnsProps): ColumnDef<UsuarioIndexType>[] {
     return [
         {
-            id: "nombre",
-            header: "Nombre",
-            cell: ({ row }) => {
-                const usuario = row.original;
-
-                return (
-                    <div>
-                        <div className="font-medium">
-                            {usuario.nombre}{" "}
-                            {usuario.apellido_paterno}
-                        </div>
-
-                        <div className="text-sm text-muted-foreground">
-                            {usuario.apellido_materno ?? ""}
-                        </div>
-                    </div>
-                );
-            },
+            accessorKey: "username",
+            header: "Usuario",
         },
 
         {
@@ -65,31 +49,10 @@ export function UsuarioColumns({
         },
 
         {
-            id: "documento",
-            header: "Documento",
-            cell: ({ row }) => (
-                <span>
-                    {row.original.numero_documento}
-                </span>
-            ),
-        },
-
-        {
-            accessorKey: "telefono",
-            header: "Teléfono",
-            cell: ({ row }) => (
-                <span>
-                    {row.original.telefono ?? "-"}
-                </span>
-            ),
-        },
-
-        {
             accessorKey: "estado",
             header: "Estado",
             cell: ({ row }) => {
-                const estado =
-                    row.original.estado.toLowerCase();
+                const estado = row.original.estado.toLowerCase();
 
                 return (
                     <Badge
@@ -102,6 +65,38 @@ export function UsuarioColumns({
                         {row.original.estado}
                     </Badge>
                 );
+            },
+        },
+
+        {
+            accessorKey: "correoVerificadoEn",
+            header: "Correo verificado",
+            cell: ({ row }) => {
+                const fecha = row.original.correoVerificadoEn;
+
+                if (!fecha) {
+                    return (
+                        <Badge variant="secondary">
+                            No verificado
+                        </Badge>
+                    );
+                }
+
+                return (
+                    <Badge variant="default">
+                        Verificado
+                    </Badge>
+                );
+            },
+        },
+
+        {
+            accessorKey: "updatedAt",
+            header: "Actualizado",
+            cell: ({ row }) => {
+                return new Date(
+                    row.original.updatedAt
+                ).toLocaleDateString("es-ES");
             },
         },
 
@@ -131,15 +126,18 @@ export function UsuarioColumns({
                             <DropdownMenuLabel>
                                 Acciones
                             </DropdownMenuLabel>
+
                             <DropdownMenuSeparator />
+
                             <DropdownMenuItem
                                 onClick={() =>
-                                    onView(usuario.id_usuario)
+                                    onView(usuario.id)
                                 }
                             >
                                 <Eye className="mr-2 h-4 w-4" />
                                 Ver usuario
                             </DropdownMenuItem>
+
                             {canEdit && (
                                 <DropdownMenuItem
                                     onClick={() =>
@@ -150,13 +148,12 @@ export function UsuarioColumns({
                                     Editar
                                 </DropdownMenuItem>
                             )}
+
                             {canDelete && (
                                 <DropdownMenuItem
                                     className="text-red-600"
                                     onClick={() =>
-                                        onDelete(
-                                            usuario.id_usuario
-                                        )
+                                        onDelete(usuario.id)
                                     }
                                 >
                                     <Trash2 className="mr-2 h-4 w-4" />
