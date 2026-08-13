@@ -1,14 +1,29 @@
-
 "use client";
 
-import { ArrowLeft, Mail, Phone, User, MapPin, Briefcase, IdCard } from "lucide-react";
+import {
+    ArrowLeft,
+    Mail,
+    Phone,
+    User,
+    MapPin,
+    Briefcase,
+    IdCard,
+    Shield,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { UsuarioType } from "../Schema/UsuarioSchema";
+
+import { UsuarioDetailType } from "../Schema/UsuarioSchema";
 
 interface UsuarioDetalleProps {
-    usuario: UsuarioType;
+    usuario: UsuarioDetailType;
     onBack: () => void;
 }
 
@@ -16,8 +31,21 @@ export function UsuarioDetalle({
     usuario,
     onBack,
 }: UsuarioDetalleProps) {
+    const perfil = usuario.perfil;
+
+    const nombreCompleto = [
+        perfil?.nombre,
+        perfil?.apellidoPaterno,
+        perfil?.apellidoMaterno,
+    ]
+        .filter(Boolean)
+        .join(" ");
+
+    const rol = usuario.roles?.[0]?.rol?.nombre ?? "-";
+
     return (
         <div className="space-y-6">
+            {/* HEADER */}
             <div className="flex items-center gap-4">
                 <Button
                     variant="outline"
@@ -37,13 +65,13 @@ export function UsuarioDetalle({
                     </p>
                 </div>
             </div>
+
+            {/* INFORMACIÓN PRINCIPAL */}
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>
                         <CardTitle>
-                            {usuario.nombre}{" "}
-                            {usuario.apellido_paterno}{" "}
-                            {usuario.apellido_materno ?? ""}
+                            {nombreCompleto || usuario.username}
                         </CardTitle>
 
                         <p className="text-sm text-muted-foreground mt-1">
@@ -64,6 +92,8 @@ export function UsuarioDetalle({
 
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        {/* NOMBRE */}
                         <div className="flex gap-3">
                             <User className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -73,13 +103,27 @@ export function UsuarioDetalle({
                                 </p>
 
                                 <p className="font-medium">
-                                    {usuario.nombre}{" "}
-                                    {usuario.apellido_paterno}{" "}
-                                    {usuario.apellido_materno ?? ""}
+                                    {nombreCompleto || "-"}
                                 </p>
                             </div>
                         </div>
 
+                        {/* USERNAME */}
+                        <div className="flex gap-3">
+                            <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+
+                            <div>
+                                <p className="text-sm text-muted-foreground">
+                                    Usuario
+                                </p>
+
+                                <p className="font-medium">
+                                    {usuario.username}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* CORREO */}
                         <div className="flex gap-3">
                             <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -94,6 +138,7 @@ export function UsuarioDetalle({
                             </div>
                         </div>
 
+                        {/* TELÉFONO */}
                         <div className="flex gap-3">
                             <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -103,11 +148,12 @@ export function UsuarioDetalle({
                                 </p>
 
                                 <p className="font-medium">
-                                    {usuario.telefono || "-"}
+                                    {perfil?.telefono || "-"}
                                 </p>
                             </div>
                         </div>
 
+                        {/* DOCUMENTO */}
                         <div className="flex gap-3">
                             <IdCard className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -117,12 +163,17 @@ export function UsuarioDetalle({
                                 </p>
 
                                 <p className="font-medium">
-                                    {usuario.tipo_documento_identidad}{" "}
-                                    {usuario.numero_documento}
+                                    {[
+                                        perfil?.tipoDocumentoIdentidad,
+                                        perfil?.numeroDocumento,
+                                    ]
+                                        .filter(Boolean)
+                                        .join(" ") || "-"}
                                 </p>
                             </div>
                         </div>
 
+                        {/* CIUDAD */}
                         <div className="flex gap-3">
                             <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -132,11 +183,12 @@ export function UsuarioDetalle({
                                 </p>
 
                                 <p className="font-medium">
-                                    {usuario.ciudad || "-"}
+                                    {perfil?.ciudad || "-"}
                                 </p>
                             </div>
                         </div>
 
+                        {/* PAÍS */}
                         <div className="flex gap-3">
                             <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -146,11 +198,12 @@ export function UsuarioDetalle({
                                 </p>
 
                                 <p className="font-medium">
-                                    {usuario.pais || "-"}
+                                    {perfil?.pais || "-"}
                                 </p>
                             </div>
                         </div>
 
+                        {/* OCUPACIÓN */}
                         <div className="flex gap-3">
                             <Briefcase className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -160,11 +213,27 @@ export function UsuarioDetalle({
                                 </p>
 
                                 <p className="font-medium">
-                                    {usuario.ocupacion || "-"}
+                                    {perfil?.ocupacion || "-"}
                                 </p>
                             </div>
                         </div>
 
+                        {/* ROL */}
+                        <div className="flex gap-3">
+                            <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
+
+                            <div>
+                                <p className="text-sm text-muted-foreground">
+                                    Rol
+                                </p>
+
+                                <p className="font-medium">
+                                    {rol}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* CONTACTO EMERGENCIA */}
                         <div className="flex gap-3">
                             <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
 
@@ -174,64 +243,73 @@ export function UsuarioDetalle({
                                 </p>
 
                                 <p className="font-medium">
-                                    {usuario.contacto_emergencia_nombre || "-"}
+                                    {perfil?.contactoEmergenciaNombre || "-"}
                                 </p>
 
-                                {usuario.contacto_emergencia_telefono && (
+                                {perfil?.contactoEmergenciaTelefono && (
                                     <p className="text-sm text-muted-foreground">
-                                        {usuario.contacto_emergencia_telefono}
+                                        {perfil.contactoEmergenciaTelefono}
                                     </p>
                                 )}
                             </div>
                         </div>
+
                     </div>
                 </CardContent>
             </Card>
 
+            {/* INFORMACIÓN ADICIONAL */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Información adicional</CardTitle>
+                    <CardTitle>
+                        Información adicional
+                    </CardTitle>
                 </CardHeader>
 
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        {/* ID */}
                         <div>
                             <p className="text-sm text-muted-foreground">
                                 ID de usuario
                             </p>
 
                             <p className="font-mono text-sm mt-1 break-all">
-                                {usuario.id_usuario}
+                                {usuario.id}
                             </p>
                         </div>
 
+                        {/* FECHA CREACIÓN */}
                         <div>
                             <p className="text-sm text-muted-foreground">
                                 Fecha de creación
                             </p>
 
                             <p className="font-medium mt-1">
-                                {usuario.created_at
+                                {usuario.createdAt
                                     ? new Date(
-                                        usuario.created_at
+                                        usuario.createdAt
                                     ).toLocaleDateString()
                                     : "-"}
                             </p>
                         </div>
 
+                        {/* ACTUALIZACIÓN */}
                         <div>
                             <p className="text-sm text-muted-foreground">
                                 Última actualización
                             </p>
 
                             <p className="font-medium mt-1">
-                                {usuario.updated_at
+                                {usuario.updatedAt
                                     ? new Date(
-                                        usuario.updated_at
+                                        usuario.updatedAt
                                     ).toLocaleDateString()
                                     : "-"}
                             </p>
                         </div>
+
                     </div>
                 </CardContent>
             </Card>
