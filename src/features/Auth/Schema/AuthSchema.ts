@@ -1,29 +1,37 @@
 import { z } from "zod";
 
 export const AuthSchema = z.object({
-    correo: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
+    correo: z.string().email({ message: "Ingresa un correo electronico valido" }),
+    password: z.string().min(6, {
+        message: "La contraseña debe tener un largo de 6 caracteres como minimo",
+    }),
 });
 
 export type AuthSchemaType = z.infer<typeof AuthSchema>;
 
 export const LoginResponseSchema = z.object({
-    token: z.string(),
+    access_token: z.string(),
     usuario: z.object({
-        id_usuario: z.number(),
-        nombre: z.string(),
-        apellido_paterno: z.string(),
+        id: z.string(),
+        username: z.string(),
         correo: z.string().email(),
         estado: z.string(),
+        rol: z.array(z.string()),
+        permisos: z.array(z.string()),
+        menus: z.array(
+            z.object({
+                id: z.string(),
+                nombre: z.string(),
+                icono: z.string(),
+                ruta: z.string(),
+                menuPadreId: z.string().nullable(),
+                orden: z.number(),
+                estado: z.string(),
+                creadoEn: z.string(),
+                actualizadoEn: z.string(),
+            })
+        ),
     }),
-    rol: z.string(),
-    permisos: z.array(z.string()),
-    menu: z.array(
-        z.object({
-            nombre: z.string(),
-            ruta: z.string()
-        })
-    )
 });
 
 export type LoginResponseType = z.infer<typeof LoginResponseSchema>;
