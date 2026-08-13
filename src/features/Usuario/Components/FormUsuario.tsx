@@ -1,7 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import {
+    Controller,
+    SubmitHandler,
+    useForm,
+} from "react-hook-form";
 
 import {
     Field,
@@ -33,6 +37,8 @@ import {
     useUpdateUser,
 } from "../Hook/UsuarioHook";
 
+import { useGetRoles } from "@/features/Roles/Hook/RolHook";
+
 type FormUsuarioProps = {
     initialData?: UsuarioType;
     mode: "create" | "edit";
@@ -54,41 +60,35 @@ export function FormUsuario({
         isPending: updating,
     } = useUpdateUser();
 
+    const {
+        data: roles,
+        isLoading: loadingRoles,
+    } = useGetRoles();
+
     const isPending = creating || updating;
 
     const form = useForm<UserCreateType>({
         resolver: zodResolver(UserCreateSchema),
+
         defaultValues: {
-            nombre: initialData?.nombre ?? "",
-            apellido_paterno:
-                initialData?.apellido_paterno ?? "",
-            apellido_materno:
-                initialData?.apellido_materno ?? "",
-            correo: initialData?.correo ?? "",
-            tipo_documento_identidad:
-                initialData?.tipo_documento_identidad ?? "",
-            numero_documento:
-                initialData?.numero_documento ?? "",
-            telefono: initialData?.telefono ?? "",
-            ciudad: initialData?.ciudad ?? "",
-            pais: initialData?.pais ?? "",
-            ocupacion:
-                initialData?.ocupacion ?? "",
-            contacto_emergencia_nombre:
-                initialData?.contacto_emergencia_nombre ?? "",
-            contacto_emergencia_telefono:
-                initialData?.contacto_emergencia_telefono ?? "",
-            rol: "estudiante",
+            nombre: "",
+            apellidoPaterno: "",
+            apellidoMaterno: "",
+            correo: "",
+            numeroDocumento: "",
+            rolId: "",
         },
     });
 
-    function onSubmit(values: UserCreateType) {
+    const onSubmit: SubmitHandler<UserCreateType> = (
+        values
+    ) => {
         if (mode === "edit" && initialData) {
             const data: UserUpdateType = values;
 
             updateUser(
                 {
-                    id: initialData.id_usuario,
+                    id: initialData.id,
                     data,
                 },
                 {
@@ -107,7 +107,7 @@ export function FormUsuario({
                 onSuccess?.();
             },
         });
-    }
+    };
 
     return (
         <form
@@ -115,14 +115,24 @@ export function FormUsuario({
             className="space-y-6"
         >
             <FieldGroup>
-                {/* Nombre y apellido paterno */}
+
+                {/* ========================= */}
+                {/* NOMBRE Y APELLIDO PATERNO */}
+                {/* ========================= */}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Controller
                         name="nombre"
                         control={form.control}
                         render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Nombre</FieldLabel>
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
+                                <FieldLabel>
+                                    Nombre
+                                </FieldLabel>
 
                                 <Input
                                     {...field}
@@ -131,7 +141,9 @@ export function FormUsuario({
 
                                 {fieldState.invalid && (
                                     <FieldError
-                                        errors={[fieldState.error]}
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
                                     />
                                 )}
                             </Field>
@@ -139,10 +151,14 @@ export function FormUsuario({
                     />
 
                     <Controller
-                        name="apellido_paterno"
+                        name="apellidoPaterno"
                         control={form.control}
                         render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
                                 <FieldLabel>
                                     Apellido paterno
                                 </FieldLabel>
@@ -154,7 +170,9 @@ export function FormUsuario({
 
                                 {fieldState.invalid && (
                                     <FieldError
-                                        errors={[fieldState.error]}
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
                                     />
                                 )}
                             </Field>
@@ -162,26 +180,37 @@ export function FormUsuario({
                     />
                 </div>
 
-                {/* Apellido materno y correo */}
+                {/* ========================= */}
+                {/* APELLIDO MATERNO Y CORREO */}
+                {/* ========================= */}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Controller
-                        name="apellido_materno"
+                        name="apellidoMaterno"
                         control={form.control}
                         render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
                                 <FieldLabel>
                                     Apellido materno
                                 </FieldLabel>
 
                                 <Input
                                     {...field}
-                                    value={field.value ?? ""}
+                                    value={
+                                        field.value ?? ""
+                                    }
                                     placeholder="Ej: García"
                                 />
 
                                 {fieldState.invalid && (
                                     <FieldError
-                                        errors={[fieldState.error]}
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
                                     />
                                 )}
                             </Field>
@@ -192,8 +221,14 @@ export function FormUsuario({
                         name="correo"
                         control={form.control}
                         render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Correo</FieldLabel>
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
+                                <FieldLabel>
+                                    Correo
+                                </FieldLabel>
 
                                 <Input
                                     {...field}
@@ -203,7 +238,9 @@ export function FormUsuario({
 
                                 {fieldState.invalid && (
                                     <FieldError
-                                        errors={[fieldState.error]}
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
                                     />
                                 )}
                             </Field>
@@ -211,243 +248,329 @@ export function FormUsuario({
                     />
                 </div>
 
-                {/* Documento */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Controller
-                        name="tipo_documento_identidad"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>
-                                    Tipo de documento
-                                </FieldLabel>
+                {/* ========================= */}
+                {/* DOCUMENTO */}
+                {/* ========================= */}
 
-                                <Input
-                                    {...field}
-                                    placeholder="Ej: CI"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-
-                    <Controller
-                        name="numero_documento"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>
-                                    Número de documento
-                                </FieldLabel>
-
-                                <Input
-                                    {...field}
-                                    placeholder="Ej: 12345678"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-                </div>
-
-                {/* Teléfono y ocupación */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Controller
-                        name="telefono"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>
-                                    Teléfono
-                                </FieldLabel>
-
-                                <Input
-                                    {...field}
-                                    value={field.value ?? ""}
-                                    placeholder="Ej: 70000000"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-
-                    <Controller
-                        name="ocupacion"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>
-                                    Ocupación
-                                </FieldLabel>
-
-                                <Input
-                                    {...field}
-                                    value={field.value ?? ""}
-                                    placeholder="Ej: Docente"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-                </div>
-
-                {/* Ciudad y país */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Controller
-                        name="ciudad"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Ciudad</FieldLabel>
-
-                                <Input
-                                    {...field}
-                                    value={field.value ?? ""}
-                                    placeholder="Ej: La Paz"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-
-                    <Controller
-                        name="pais"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>País</FieldLabel>
-
-                                <Input
-                                    {...field}
-                                    value={field.value ?? ""}
-                                    placeholder="Ej: Bolivia"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-                </div>
-
-                {/* Contacto de emergencia */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Controller
-                        name="contacto_emergencia_nombre"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>
-                                    Contacto de emergencia
-                                </FieldLabel>
-
-                                <Input
-                                    {...field}
-                                    value={field.value ?? ""}
-                                    placeholder="Nombre completo"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-
-                    <Controller
-                        name="contacto_emergencia_telefono"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>
-                                    Teléfono de emergencia
-                                </FieldLabel>
-
-                                <Input
-                                    {...field}
-                                    value={field.value ?? ""}
-                                    placeholder="Ej: 70000000"
-                                />
-
-                                {fieldState.invalid && (
-                                    <FieldError
-                                        errors={[fieldState.error]}
-                                    />
-                                )}
-                            </Field>
-                        )}
-                    />
-                </div>
-
-                {/* Rol */}
                 <Controller
-                    name="rol"
+                    name="numeroDocumento"
                     control={form.control}
                     render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel>Rol</FieldLabel>
+                        <Field
+                            data-invalid={
+                                fieldState.invalid
+                            }
+                        >
+                            <FieldLabel>
+                                Número de documento
+                            </FieldLabel>
 
-                            <Select
-                                value={field.value}
-                                onValueChange={field.onChange}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Seleccionar rol" />
-                                </SelectTrigger>
-
-                                <SelectContent>
-                                    <SelectItem value="administrador">
-                                        Administrador
-                                    </SelectItem>
-
-                                    <SelectItem value="docente">
-                                        Docente
-                                    </SelectItem>
-
-                                    <SelectItem value="estudiante">
-                                        Estudiante
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <Input
+                                {...field}
+                                placeholder="Ej: 12345678"
+                            />
 
                             {fieldState.invalid && (
                                 <FieldError
-                                    errors={[fieldState.error]}
+                                    errors={[
+                                        fieldState.error,
+                                    ]}
                                 />
                             )}
                         </Field>
                     )}
                 />
+
+                {/* ========================= */}
+                {/* ROL */}
+                {/* ========================= */}
+
+                <Controller
+                    name="rolId"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                        <Field
+                            data-invalid={
+                                fieldState.invalid
+                            }
+                        >
+                            <FieldLabel>
+                                Rol
+                            </FieldLabel>
+
+                            <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                disabled={loadingRoles}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue
+                                        placeholder={
+                                            loadingRoles
+                                                ? "Cargando roles..."
+                                                : "Seleccionar rol"
+                                        }
+                                    />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {roles?.map((rol) => (
+                                        <SelectItem
+                                            key={rol.id}
+                                            value={rol.id}
+                                        >
+                                            {rol.nombre}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[
+                                        fieldState.error,
+                                    ]}
+                                />
+                            )}
+                        </Field>
+                    )}
+                />
+
+                {/* ========================= */}
+                {/* CAMPOS DE EDITAR */}
+                {/* ========================= */}
+
+                {mode === "edit" && (
+                    <>
+                        {/* Teléfono y ocupación */}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <Controller
+                                name="telefono"
+                                control={form.control}
+                                render={({
+                                    field,
+                                    fieldState,
+                                }) => (
+                                    <Field
+                                        data-invalid={
+                                            fieldState.invalid
+                                        }
+                                    >
+                                        <FieldLabel>
+                                            Teléfono
+                                        </FieldLabel>
+
+                                        <Input
+                                            {...field}
+                                            value={
+                                                field.value ??
+                                                ""
+                                            }
+                                            placeholder="Ej: 70000000"
+                                        />
+
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[
+                                                    fieldState.error,
+                                                ]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+
+                            <Controller
+                                name="ocupacion"
+                                control={form.control}
+                                render={({
+                                    field,
+                                    fieldState,
+                                }) => (
+                                    <Field
+                                        data-invalid={
+                                            fieldState.invalid
+                                        }
+                                    >
+                                        <FieldLabel>
+                                            Ocupación
+                                        </FieldLabel>
+
+                                        <Input
+                                            {...field}
+                                            value={
+                                                field.value ??
+                                                ""
+                                            }
+                                            placeholder="Ej: Docente"
+                                        />
+
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[
+                                                    fieldState.error,
+                                                ]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </div>
+
+                        {/* Ciudad y país */}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <Controller
+                                name="ciudad"
+                                control={form.control}
+                                render={({
+                                    field,
+                                    fieldState,
+                                }) => (
+                                    <Field
+                                        data-invalid={
+                                            fieldState.invalid
+                                        }
+                                    >
+                                        <FieldLabel>
+                                            Ciudad
+                                        </FieldLabel>
+
+                                        <Input
+                                            {...field}
+                                            value={
+                                                field.value ??
+                                                ""
+                                            }
+                                            placeholder="Ej: La Paz"
+                                        />
+
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[
+                                                    fieldState.error,
+                                                ]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+
+                            <Controller
+                                name="pais"
+                                control={form.control}
+                                render={({
+                                    field,
+                                    fieldState,
+                                }) => (
+                                    <Field
+                                        data-invalid={
+                                            fieldState.invalid
+                                        }
+                                    >
+                                        <FieldLabel>
+                                            País
+                                        </FieldLabel>
+
+                                        <Input
+                                            {...field}
+                                            value={
+                                                field.value ??
+                                                ""
+                                            }
+                                            placeholder="Ej: Bolivia"
+                                        />
+
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[
+                                                    fieldState.error,
+                                                ]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </div>
+
+                        {/* Contacto de emergencia */}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <Controller
+                                name="contacto_emergencia_nombre"
+                                control={form.control}
+                                render={({
+                                    field,
+                                    fieldState,
+                                }) => (
+                                    <Field
+                                        data-invalid={
+                                            fieldState.invalid
+                                        }
+                                    >
+                                        <FieldLabel>
+                                            Contacto de emergencia
+                                        </FieldLabel>
+
+                                        <Input
+                                            {...field}
+                                            value={
+                                                field.value ??
+                                                ""
+                                            }
+                                            placeholder="Nombre completo"
+                                        />
+
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[
+                                                    fieldState.error,
+                                                ]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+
+                            <Controller
+                                name="contacto_emergencia_telefono"
+                                control={form.control}
+                                render={({
+                                    field,
+                                    fieldState,
+                                }) => (
+                                    <Field
+                                        data-invalid={
+                                            fieldState.invalid
+                                        }
+                                    >
+                                        <FieldLabel>
+                                            Teléfono de emergencia
+                                        </FieldLabel>
+
+                                        <Input
+                                            {...field}
+                                            value={
+                                                field.value ??
+                                                ""
+                                            }
+                                            placeholder="Ej: 70000000"
+                                        />
+
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[
+                                                    fieldState.error,
+                                                ]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </div>
+                    </>
+                )}
             </FieldGroup>
 
             <Button
