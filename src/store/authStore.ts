@@ -1,19 +1,18 @@
-"use client";
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LoginResponseType } from "@/features/Auth/Schema/AuthSchema";
 
 type Usuario = LoginResponseType["usuario"];
-type Menu = LoginResponseType["menu"];
-type Permisos = LoginResponseType["permisos"];
+type Menu = LoginResponseType["usuario"]["menus"];
+type Permisos = LoginResponseType["usuario"]["permisos"];
+type Rol = LoginResponseType["usuario"]["rol"];
 
 interface AuthState {
     token: string | null;
     usuario: Usuario | null;
-    rol: string | null;
+    rol: Rol;
     permisos: Permisos;
-    menu: Menu | null;
+    menu: Menu;
 
     login: (data: LoginResponseType) => void;
     logout: () => void;
@@ -24,25 +23,22 @@ export const useAuthStore = create<AuthState>()(
         (set) => ({
             token: null,
             usuario: null,
-            rol: null,
+            rol: [],
             permisos: [],
-            menu: null,
+            menu: [],
 
             login: (data) => {
                 const {
-                    token,
+                    access_token,
                     usuario,
-                    rol,
-                    permisos,
-                    menu,
                 } = data;
 
                 set({
-                    token,
+                    token: access_token,
                     usuario,
-                    rol,
-                    permisos,
-                    menu,
+                    rol: usuario.rol,
+                    permisos: usuario.permisos,
+                    menu: usuario.menus,
                 });
             },
 
@@ -50,9 +46,9 @@ export const useAuthStore = create<AuthState>()(
                 set({
                     token: null,
                     usuario: null,
-                    rol: null,
+                    rol: [],
                     permisos: [],
-                    menu: null,
+                    menu: [],
                 });
             },
         }),
