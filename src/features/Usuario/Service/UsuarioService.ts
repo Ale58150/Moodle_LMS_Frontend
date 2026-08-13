@@ -1,10 +1,10 @@
 import { apiService } from "@/api/api";
 import { ResponseType } from "@/utils/Schema/Response";
-import { UserCreateType, UserIndexResponseType, UserUpdateType, UsuarioType } from "../Schema/UsuarioSchema";
+import { UserCreateType, UserIndexResponseType, UserUpdateType } from "../Schema/UsuarioSchema";
 
 
-export async function GetPaginatedUsers(page: number, perPage: number = 10): Promise<UserIndexResponseType> {
-    const response = await apiService.get(`/usuario/usuarios?page=${page}&per_page=${perPage}`);
+export async function GetPaginatedUsers(page: number, limit: number = 10): Promise<UserIndexResponseType> {
+    const response = await apiService.get(`/user?page=${page}&limit=${limit}`);
     return response.data;
 }
 
@@ -24,6 +24,11 @@ export async function UpdateUser(id: string, data: UserUpdateType): Promise<{ su
 }
 
 export async function DeleteUserLogically(id: string): Promise<ResponseType> {
-    const response = await apiService.delete(`/usuario/usuarios/${id}`);
+    const response = await apiService.delete(`/user/${id}`);
+    return response.data;
+}
+
+export async function SearchUsers(q: string) {
+    const response = await apiService.get(`/user/search?q=${encodeURIComponent(q)}`);
     return response.data;
 }

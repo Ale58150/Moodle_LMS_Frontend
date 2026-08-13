@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CreateUser, DeleteUserLogically, GetPaginatedUsers, GetUserById, UpdateUser } from "../Service/UsuarioService";
+import { CreateUser, DeleteUserLogically, GetPaginatedUsers, GetUserById, SearchUsers, UpdateUser } from "../Service/UsuarioService";
 import { UserCreateType, UserUpdateType } from "../Schema/UsuarioSchema";
 
-export function useGetUsers(page: number, perPage: number = 10) {
+export function useGetUsers(page: number, limit: number = 10) {
     return useQuery({
-        queryKey: ["users", "list", page, perPage],
-        queryFn: () => GetPaginatedUsers(page, perPage),
+        queryKey: ["users", "list", page, limit],
+        queryFn: () => GetPaginatedUsers(page, limit),
         staleTime: 1000 * 60 * 2,
     });
 }
@@ -31,6 +31,15 @@ export function useCreateUser() {
         onError: () => {
             toast.error("Error al procesar la solicitud de creación");
         }
+    });
+}
+
+export function useSearchUsers(q: string) {
+    return useQuery({
+        queryKey: ["users", "search", q],
+        queryFn: () => SearchUsers(q),
+        enabled: q.trim().length > 0,
+        staleTime: 1000 * 30,
     });
 }
 
