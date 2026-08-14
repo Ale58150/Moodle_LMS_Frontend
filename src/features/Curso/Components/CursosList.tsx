@@ -1,5 +1,4 @@
-"use client";
-
+// features/Curso/Components/CursosList.tsx
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -13,6 +12,7 @@ interface CursosListProps {
     search: string;
     categoria: string;
 
+    onVer?: (curso: CursoType) => void;
     onEditar?: (curso: CursoType) => void;
     onEliminar?: (curso: CursoType) => void;
 
@@ -23,25 +23,16 @@ interface CursosListProps {
 export function CursosList({
     search,
     categoria,
+    onVer,
     onEditar,
     onEliminar,
     puedeEditar = false,
     puedeEliminar = false,
 }: CursosListProps) {
     const [page, setPage] = useState(1);
-
     const limit = 10;
 
-    const {
-        data,
-        isLoading,
-        isError,
-    } = useCursos(
-        page,
-        limit,
-        search,
-        categoria
-    );
+    const { data, isLoading, isError } = useCursos(page, limit, search, categoria);
 
     if (isLoading) {
         return (
@@ -54,9 +45,7 @@ export function CursosList({
     if (isError) {
         return (
             <div className="flex min-h-[300px] items-center justify-center">
-                <p className="text-sm text-destructive">
-                    No se pudieron cargar los cursos.
-                </p>
+                <p className="text-sm text-destructive">No se pudieron cargar los cursos.</p>
             </div>
         );
     }
@@ -66,13 +55,13 @@ export function CursosList({
 
     return (
         <div className="space-y-5">
-
             {cursos.length > 0 ? (
                 <div className="grid gap-5 lg:grid-cols-2">
                     {cursos.map((curso) => (
                         <CursoItem
                             key={curso.id}
                             curso={curso}
+                            onVer={onVer}
                             puedeEditar={puedeEditar}
                             puedeEliminar={puedeEliminar}
                             onEditar={onEditar}
@@ -81,7 +70,7 @@ export function CursosList({
                     ))}
                 </div>
             ) : (
-                <div className="flex min-h-[280px] items-center justify-center rounded-xl border bg-muted/20 "                >
+                <div className="flex min-h-[280px] items-center justify-center rounded-xl border bg-muted/20">
                     <p className="text-sm text-muted-foreground">
                         No existen cursos que coincidan con tu búsqueda.
                     </p>
@@ -100,11 +89,7 @@ export function CursosList({
                             variant="outline"
                             size="sm"
                             disabled={meta.page <= 1}
-                            onClick={() =>
-                                setPage((prev) =>
-                                    Math.max(prev - 1, 1)
-                                )
-                            }
+                            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                         >
                             Anterior
                         </Button>
@@ -113,12 +98,8 @@ export function CursosList({
                             type="button"
                             variant="outline"
                             size="sm"
-                            disabled={
-                                meta.page >= meta.totalPages
-                            }
-                            onClick={() =>
-                                setPage((prev) => prev + 1)
-                            }
+                            disabled={meta.page >= meta.totalPages}
+                            onClick={() => setPage((prev) => prev + 1)}
                         >
                             Siguiente
                         </Button>

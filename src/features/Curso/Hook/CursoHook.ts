@@ -1,5 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateCurso, DeleteCurso, GetCourseCategories, GetPaginatedCourses, UpdateCurso } from "../Service/CursoService";
+import {
+    CreateCurso,
+    DeleteCurso,
+    GetCourseById,
+    GetCourseCategories,
+    GetPaginatedCourses,
+    UpdateCurso,
+} from "../Service/CursoService";
 import { CursoCreateType, CursoUpdateType } from "../Schema/CursoSchema";
 
 export function useCursos(
@@ -9,23 +16,17 @@ export function useCursos(
     categoria: string = "",
 ) {
     return useQuery({
-        queryKey: [
-            "cursos",
-            page,
-            limit,
-            search,
-            categoria,
-        ],
-
-        queryFn: () =>
-            GetPaginatedCourses({
-                page,
-                limit,
-                search,
-                categoria,
-            }),
-
+        queryKey: ["cursos", page, limit, search, categoria],
+        queryFn: () => GetPaginatedCourses({ page, limit, search, categoria }),
         placeholderData: (previousData) => previousData,
+    });
+}
+
+export function useGetCurso(id: string, enabled = true) {
+    return useQuery({
+        queryKey: ["curso", id],
+        queryFn: () => GetCourseById(id),
+        enabled: enabled && !!id,
     });
 }
 
@@ -37,15 +38,12 @@ export function useCategoriasCursos() {
     });
 }
 
-
 export function useCreateCurso() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (data: CursoCreateType) => CreateCurso(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["cursos"],
-            });
+            queryClient.invalidateQueries({ queryKey: ["cursos"] });
         },
     });
 }
@@ -53,31 +51,20 @@ export function useCreateCurso() {
 export function useUpdateCurso() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, data, }: { id: string; data: CursoUpdateType; }) =>
-            UpdateCurso(id, data),
-
+        mutationFn: ({ id, data }: { id: string; data: CursoUpdateType }) => UpdateCurso(id, data),
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({
-                queryKey: ["cursos"],
-            });
-
-            queryClient.invalidateQueries({
-                queryKey: ["curso", variables.id],
-            });
+            queryClient.invalidateQueries({ queryKey: ["cursos"] });
+            queryClient.invalidateQueries({ queryKey: ["curso", variables.id] });
         },
     });
 }
 
 export function useDeleteCurso() {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: (id: string) => DeleteCurso(id),
-
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["cursos"],
-            });
+            queryClient.invalidateQueries({ queryKey: ["cursos"] });
         },
     });
 }

@@ -35,18 +35,9 @@ export function CursosToolbar({
     return (
         <div className="flex flex-col gap-3 sm:flex-row">
 
-            {/* Buscar */}
             <div className="relative flex-1">
                 <Search
-                    className="
-                        absolute
-                        left-3
-                        top-1/2
-                        h-4
-                        w-4
-                        -translate-y-1/2
-                        text-muted-foreground
-                    "
+                    className=" absolute left-3 top-1/2  h-4  w-4  -translate-y-1/2  text-muted-foregroun "
                 />
 
                 <Input
@@ -59,26 +50,13 @@ export function CursosToolbar({
                 />
             </div>
 
-            {/* Categoría */}
             <select
                 value={categoria}
                 onChange={(event) =>
                     onCategoriaChange(event.target.value)
                 }
                 disabled={isLoading}
-                className="
-                    h-10
-                    min-w-[200px]
-                    rounded-md
-                    border
-                    bg-background
-                    px-3
-                    text-sm
-                    outline-none
-                    transition-colors
-                    focus:border-primary
-                    disabled:cursor-not-allowed
-                    disabled:opacity-50
+                className=" h-10 min-w-[200px] rounded-md border bg-background px-3 text-sm outline-none transition-colors focus:border-primary disabled:cursor-not-allowed disabled:opacity-50
                 "
             >
                 <option value="">
@@ -94,8 +72,6 @@ export function CursosToolbar({
                     </option>
                 ))}
             </select>
-
-            {/* Limpiar */}
             {hayFiltros && (
                 <Button
                     type="button"
