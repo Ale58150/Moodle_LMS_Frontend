@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -11,15 +12,24 @@ import { CursoType } from "../Schema/CursoSchema";
 interface CursosListProps {
     search: string;
     categoria: string;
+
     onEditar?: (curso: CursoType) => void;
+    onEliminar?: (curso: CursoType) => void;
+
+    puedeEditar?: boolean;
+    puedeEliminar?: boolean;
 }
 
 export function CursosList({
     search,
     categoria,
     onEditar,
+    onEliminar,
+    puedeEditar = false,
+    puedeEliminar = false,
 }: CursosListProps) {
-    const page = 1;
+    const [page, setPage] = useState(1);
+
     const limit = 10;
 
     const {
@@ -63,21 +73,15 @@ export function CursosList({
                         <CursoItem
                             key={curso.id}
                             curso={curso}
-                            esAdmin
+                            puedeEditar={puedeEditar}
+                            puedeEliminar={puedeEliminar}
                             onEditar={onEditar}
+                            onEliminar={onEliminar}
                         />
                     ))}
                 </div>
             ) : (
-                <div className="
-                    flex
-                    min-h-[280px]
-                    items-center
-                    justify-center
-                    rounded-xl
-                    border
-                    bg-muted/20
-                ">
+                <div className="flex min-h-[280px] items-center justify-center rounded-xl border bg-muted/20 "                >
                     <p className="text-sm text-muted-foreground">
                         No existen cursos que coincidan con tu búsqueda.
                     </p>
@@ -86,34 +90,41 @@ export function CursosList({
 
             {meta && meta.totalPages > 1 && (
                 <div className="flex items-center justify-between border-t pt-5">
-
                     <p className="text-sm text-muted-foreground">
                         Página {meta.page} de {meta.totalPages}
                     </p>
 
                     <div className="flex items-center gap-2">
-
                         <Button
+                            type="button"
                             variant="outline"
                             size="sm"
                             disabled={meta.page <= 1}
+                            onClick={() =>
+                                setPage((prev) =>
+                                    Math.max(prev - 1, 1)
+                                )
+                            }
                         >
                             Anterior
                         </Button>
 
                         <Button
+                            type="button"
                             variant="outline"
                             size="sm"
-                            disabled={meta.page >= meta.totalPages}
+                            disabled={
+                                meta.page >= meta.totalPages
+                            }
+                            onClick={() =>
+                                setPage((prev) => prev + 1)
+                            }
                         >
                             Siguiente
                         </Button>
-
                     </div>
-
                 </div>
             )}
-
         </div>
     );
 }

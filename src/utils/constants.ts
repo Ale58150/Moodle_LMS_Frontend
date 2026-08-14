@@ -1,10 +1,17 @@
 export const PERMISSIONS = {
     USUARIOS: {
-            VER: "usuarios.ver",
-            CREAR: "usuarios.crear",
-            EDITAR: "usuarios.editar",
-            ELIMINAR: "usuarios.eliminar",
+        VER: "usuarios.ver",
+        CREAR: "usuarios.crear",
+        EDITAR: "usuarios.editar",
+        ELIMINAR: "usuarios.eliminar",
     },
+    CURSOS: {
+        VER: "cursos.ver",
+        CREAR: "cursos.crear",
+        EDITAR: "cursos.editar",
+        ELIMINAR: "cursos.eliminar",
+    },
+
 
     ROLES: {
         VER: "roles.ver",

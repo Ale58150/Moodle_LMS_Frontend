@@ -2,19 +2,42 @@
 
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+
 import { CursosList } from "@/features/Curso/Components/CursosList";
 import { CursosToolbar } from "@/features/Curso/Components/CursosToolbar";
 import { DialogCurso } from "@/features/Curso/Components/DialogCurso";
+
 import { CursoType } from "@/features/Curso/Schema/CursoSchema";
+
+import { usePermission } from "@/hooks/usePermission";
+import { PERMISSIONS } from "@/utils/constants";
 
 export default function CursosPage() {
     const [search, setSearch] = useState("");
     const [categoria, setCategoria] = useState("");
 
     const [open, setOpen] = useState(false);
-    const [mode, setMode] = useState<"create" | "edit">("create");
+
+    const [mode, setMode] =
+        useState<"create" | "edit">("create");
+
     const [cursoSeleccionado, setCursoSeleccionado] =
         useState<CursoType | undefined>(undefined);
+
+    const { can } = usePermission();
+
+    const puedeCrear = can(
+        PERMISSIONS.CURSOS.CREAR
+    );
+
+    const puedeEditar = can(
+        PERMISSIONS.CURSOS.EDITAR
+    );
+
+    const puedeEliminar = can(
+        PERMISSIONS.CURSOS.ELIMINAR
+    );
 
     const limpiarFiltros = () => {
         setSearch("");
@@ -36,7 +59,6 @@ export default function CursosPage() {
     return (
         <div className="space-y-6 p-6">
 
-            {/* Encabezado */}
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">
@@ -48,16 +70,16 @@ export default function CursosPage() {
                     </p>
                 </div>
 
-                <button
-                    type="button"
-                    onClick={abrirCrear}
-                    className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-                >
-                    Nuevo curso
-                </button>
+                {puedeCrear && (
+                    <Button
+                        type="button"
+                        onClick={abrirCrear}
+                    >
+                        Nuevo curso
+                    </Button>
+                )}
             </div>
 
-            {/* Filtros */}
             <CursosToolbar
                 search={search}
                 categoria={categoria}
@@ -66,14 +88,14 @@ export default function CursosPage() {
                 onClear={limpiarFiltros}
             />
 
-            {/* Cursos */}
             <CursosList
                 search={search}
                 categoria={categoria}
                 onEditar={abrirEditar}
+                puedeEditar={puedeEditar}
+                puedeEliminar={puedeEliminar}
             />
 
-            {/* Crear / editar */}
             <DialogCurso
                 open={open}
                 onOpenChange={setOpen}
