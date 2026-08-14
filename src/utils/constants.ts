@@ -11,6 +11,13 @@ export const PERMISSIONS = {
         EDITAR: "cursos.editar",
         ELIMINAR: "cursos.eliminar",
     },
+    MODULOS: {
+        VER: "cursos.ver",
+        CREAR: "cursos.crear",
+        EDITAR: "cursos.editar",
+        ELIMINAR: "cursos.eliminar",
+    },
+
 
 
     ROLES: {
