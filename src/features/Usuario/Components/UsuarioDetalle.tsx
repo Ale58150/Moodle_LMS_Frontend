@@ -292,7 +292,6 @@ export function UsuarioDetalle({
                                     : "-"}
                             </p>
                         </div>
-
                         <div>
                             <p className="text-sm text-muted-foreground">
                                 Última actualización
@@ -309,7 +308,6 @@ export function UsuarioDetalle({
                     </div>
                 </CardContent>
             </Card>
-
             <Dialog
                 open={openEdit}
                 onOpenChange={setOpenEdit}

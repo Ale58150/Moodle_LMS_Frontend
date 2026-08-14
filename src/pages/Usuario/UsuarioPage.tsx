@@ -162,7 +162,7 @@ export default function UsuarioPage() {
                 open={dialogOpen}
                 onOpenChange={setDialogOpen}
                 mode={selectedUser ? "edit" : "create"}
-                initialData={selectedUser}
+                userId={selectedUser?.id}
             />
 
         </div>
