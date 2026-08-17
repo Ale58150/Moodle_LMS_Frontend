@@ -1,4 +1,3 @@
-// router.tsx
 import { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -14,6 +13,7 @@ import CursosPage from "@/pages/Curso/CursoPage";
 import CursoDetallePage from "@/pages/Curso/CursoDetallePage";
 import ModulosPage from "@/pages/Modulo/ModuloPage";
 import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
+import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage"; // 👈 nuevo
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -51,37 +51,17 @@ export const router = createBrowserRouter([
                             </Suspense>
                         ),
                         children: [
+                            { path: "inicio", element: <Inicio /> },
+                            { path: "perfil", element: <ProfilePage /> },
+                            { path: "usuario", element: <UsuarioPage /> },
+                            { path: "usuario/:id", element: <UsuarioDetallePage /> },
+                            { path: "cursos", element: <CursosPage /> },
+                            { path: "cursos/:id", element: <CursoDetallePage /> },
+                            { path: "cursos/:id/modulos", element: <ModulosPage /> },
+                            { path: "cursos/:id/modulos/:moduloId", element: <ModuloDetallePage /> },
                             {
-                                path: "inicio",
-                                element: <Inicio />,
-                            },
-                            {
-                                path: "perfil",
-                                element: <ProfilePage />,
-                            },
-                            {
-                                path: "usuario",
-                                element: <UsuarioPage />,
-                            },
-                            {
-                                path: "usuario/:id",
-                                element: <UsuarioDetallePage />,
-                            },
-                            {
-                                path: "cursos",
-                                element: <CursosPage />,
-                            },
-                            {
-                                path: "cursos/:id",
-                                element: <CursoDetallePage />,
-                            },
-                            {
-                                path: "cursos/:id/modulos",
-                                element: <ModulosPage />,
-                            },
-                            {
-                                path: "cursos/:id/modulos/:moduloId",
-                                element: <ModuloDetallePage />,
+                                path: "cursos/:id/modulos/:moduloId/lecciones/:leccionId", // 👈 nuevo
+                                element: <LeccionDetallePage />,
                             },
                         ],
                     },
