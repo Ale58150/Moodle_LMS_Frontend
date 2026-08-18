@@ -77,9 +77,6 @@ export function LeccionCheckpointForm({
         );
     }
 
-    // Punto 3: sin checkpoint -> se marca directo. Si tiene éxito, salta sola
-    // a la siguiente (handleExito). Si el backend rechaza por no estar
-    // inscrito, se muestra el diálogo en vez de intentar navegar.
     if (!formulario) {
         return (
             <>
