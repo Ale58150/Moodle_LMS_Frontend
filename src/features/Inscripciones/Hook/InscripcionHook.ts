@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import {
     CrearInscripcion,
     ObtenerCursos,
-    ObtenerModulosPorCurso,
     ObtenerEstudiantes,
 } from "../Service/InscripcionService";
 
@@ -26,14 +25,6 @@ export function useCursos() {
     return useQuery({
         queryKey: ["inscripciones", "cursos"],
         queryFn: ObtenerCursos,
-    });
-}
-
-export function useModulosPorCurso(cursoId: string | null) {
-    return useQuery({
-        queryKey: ["inscripciones", "modulos", cursoId],
-        queryFn: () => ObtenerModulosPorCurso(cursoId!),
-        enabled: !!cursoId,
     });
 }
 

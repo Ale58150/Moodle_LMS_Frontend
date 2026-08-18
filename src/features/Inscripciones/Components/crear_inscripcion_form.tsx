@@ -23,28 +23,48 @@ import {
 import {
     useCrearInscripcion,
     useCursos,
-    useModulosPorCurso,
     useEstudiantes,
 } from "../Hook/InscripcionHook";
 
 export function CrearInscripcionForm() {
-    const [cursoSeleccionado, setCursoSeleccionado] = useState<string | null>(null);
-
     const crearInscripcionMutation = useCrearInscripcion();
-    const { data: cursos, isLoading: loadingCursos } = useCursos();
-    const { data: modulos, isLoading: loadingModulos } = useModulosPorCurso(cursoSeleccionado);
-    const { data: estudiantes, isLoading: loadingEstudiantes } = useEstudiantes();
+    const { data: cursos = [], isLoading: loadingCursos } = useCursos();
+    const { data: estudiantes = [], isLoading: loadingEstudiantes } = useEstudiantes();
+    console.log("estudiantes", estudiantes);
+    const [cursoId, setCursoId] = useState<string | null>(null);
 
     const {
         handleSubmit,
         control,
+        setValue,
         formState: { errors },
     } = useForm<CrearInscripcionSchemaType>({
         resolver: zodResolver(CrearInscripcionSchema),
         defaultValues: {
             estadoAcceso: "pendiente",
+            cursoId: "",
+            moduloId: "",
+            estudianteIds: [],
         },
     });
+
+    const cursoSeleccionado = cursos.find(
+        (curso: any) => curso.id === cursoId
+    );
+
+    const modulos = cursoSeleccionado?.modulos ?? [];
+    const cursoOptions = cursos.map((curso: any) => ({
+        value: curso.id,
+        label: curso.nombre,
+    }));
+    const moduloOptions = modulos.map((modulo: any) => ({
+        value: modulo.id,
+        label: modulo.nombre,
+    }));
+    const estudianteOptions = estudiantes.map((estudiante: any) => ({
+        value: estudiante.id,
+        label: estudiante.username,
+    }));
 
     const onSubmit = (data: CrearInscripcionSchemaType) => {
         crearInscripcionMutation.mutate(data);
@@ -71,15 +91,19 @@ export function CrearInscripcionForm() {
                                     control={control}
                                     render={({ field }) => (
                                         <Select
-                                            value={cursos?.find(
-                                                (curso: any) => curso.id === field.value
-                                            )}
-                                            options={cursos?.map((curso: any) => ({
-                                                value: curso.id,
-                                                label: curso.nombre,
-                                            }))}
+                                            options={cursoOptions}
+                                            value={cursoOptions.find(
+                                                (option: any) => option.value === field.value
+                                            ) ?? null}
+                                            onChange={(option) => {
+                                                const nuevoCursoId = option ? option.value : null;
+                                                field.onChange(nuevoCursoId);
+                                                setCursoId(nuevoCursoId);
+                                                setValue("moduloId", "");
+                                            }}
                                             isLoading={loadingCursos}
                                             placeholder="Selecciona un curso"
+                                            isClearable
                                         />
                                     )}
                                 />
@@ -97,16 +121,17 @@ export function CrearInscripcionForm() {
                                     control={control}
                                     render={({ field }) => (
                                         <Select
-                                            value={modulos?.find(
-                                                (modulo: any) => modulo.id === field.value
-                                            )}
-                                            options={modulos?.map((modulo: any) => ({
-                                                value: modulo.id,
-                                                label: modulo.nombre,
-                                            }))}
-                                            isLoading={loadingModulos}
-                                            placeholder="Selecciona un módulo"
+                                            options={moduloOptions}
+                                            value={moduloOptions.find(
+                                                (option: any) => option.value === field.value
+                                            ) ?? null}
+                                            onChange={(option) => {
+                                                field.onChange(option ? option.value : null);
+                                            }}
+                                            isLoading={loadingCursos}
+                                            placeholder={cursoSeleccionado ? "Selecciona un módulo" : "Selecciona un curso primero"}
                                             isDisabled={!cursoSeleccionado}
+                                            isClearable
                                         />
                                     )}
                                 />
@@ -119,22 +144,23 @@ export function CrearInscripcionForm() {
 
                             <Field>
                                 <FieldLabel htmlFor="estudianteId">Estudiante</FieldLabel>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 w-full">
                                     <Controller
-                                        name="estudianteId"
+                                        name="estudianteIds"
                                         control={control}
                                         render={({ field }) => (
                                             <Select
-                                                value={estudiantes?.find(
-                                                    (estudiante: any) => estudiante.id === field.value
-                                                )}
-                                                options={estudiantes?.map((estudiante: any) => ({
-                                                    value: estudiante.id,
-                                                    label: estudiante.username,
-                                                }))}
+                                                options={estudianteOptions}
+                                                value={estudianteOptions.filter((option: any) => field.value.includes(option.value))}
+                                                onChange={(option) => {
+                                                    field.onChange(
+                                                        option.map((option) => option.value)
+                                                    )
+                                                }}
                                                 isLoading={loadingEstudiantes}
                                                 isMulti
                                                 placeholder="Selecciona un estudiante"
+                                                closeMenuOnSelect={false}
                                             />
                                         )}
                                     />
@@ -142,9 +168,9 @@ export function CrearInscripcionForm() {
                                         <Plus className="size-4" />
                                     </Button>
                                 </div>
-                                {errors.estudianteId && (
+                                {errors.estudianteIds && (
                                     <span className="text-sm text-red-500">
-                                        {errors.estudianteId.message}
+                                        {errors.estudianteIds.message}
                                     </span>
                                 )}
                             </Field>

@@ -10,6 +10,7 @@ import { ProfilePage } from "@/pages/Auth/MeProfile";
 import UsuarioPage from "@/pages/Usuario/UsuarioPage";
 import UsuarioDetallePage from "@/pages/Usuario/UsuarioDetallePage";
 import { CrearInscripcionPage } from "@/pages/Inscripciones/CrearInscripcionPage";
+import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
                         ],
                     },
                 ],
+            },
+            {
+                path: "inscripciones",
+                element: <InscripcionesPage />
             },
             {
                 path: "inscripciones/crear",

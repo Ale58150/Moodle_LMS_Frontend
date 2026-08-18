@@ -3,7 +3,7 @@ import { z } from "zod";
 export const CrearInscripcionSchema = z.object({
     cursoId: z.string().min(1, { message: "El curso es obligatorio" }),
     moduloId: z.string().min(1, { message: "El módulo es obligatorio" }),
-    estudianteId: z.string().min(1, { message: "El estudiante es obligatorio" }),
+    estudianteIds: z.array(z.string()).min(1, { message: "Debe seleccionar al menos un estudiante" }),
     estadoAcceso: z.string()
 });
 

@@ -30,4 +30,10 @@ export const menuItems = [
         url: "/mis-cursos",
         roles: ["estudiante"],
     },
+    {
+        title: "Inscripciones",
+        icon: faGraduationCap,
+        url: "/inscripciones",
+        roles: ["administrador"],
+    }
 ];
