@@ -1,7 +1,8 @@
 import { useMeProfile } from "../Hook/AuthHook";
 import { AppTitle } from "@/components/common/Apptittle";
 import { QueryState } from "@/components/common/QueryState";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { InfoSection } from "@/components/common/info/InfoSection";
+import { InfoField } from "@/components/common/info/InfoField";
 
 export function ProfileView() {
     const { data: usuario, isLoading, isError, error } = useMeProfile();
@@ -15,186 +16,104 @@ export function ProfileView() {
         >
             {usuario && (
                 <div className="w-full space-y-8 dark:bg-black">
-                    <div className="pb-4 border-b border-neutral-200 dark:border-neutral-800">
+                    <div className="border-b border-neutral-200 pb-4 dark:border-neutral-800">
                         <AppTitle
                             title="Configuración de Cuenta"
                             subtitle="Administra tu información personal y preferencias en Elite Academy"
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-1">
-                            <AppTitle title="Fotografía de Perfil" subtitle="Imagen de identificación institucional." />
-                        </div>
-                        <div className="md:col-span-2 flex items-center gap-4">
+                    <InfoSection title="Fotografía de Perfil" subtitle="Imagen de identificación institucional.">
+                        <div className="flex items-center gap-4 sm:col-span-2">
                             {usuario.fotografia_ruta ? (
                                 <img
                                     src={usuario.fotografia_ruta}
                                     alt={usuario.nombre}
-                                    className="w-16 h-16 rounded-full object-cover border border-neutral-200 dark:border-neutral-800"
+                                    className="h-16 w-16 rounded-full border border-neutral-200 object-cover dark:border-neutral-800"
                                 />
                             ) : (
-                                <div className="w-16 h-16 bg-primary/10 text-primary border border-primary/20 rounded-full flex items-center justify-center text-xl font-bold uppercase">
+                                <div className="flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-xl font-bold uppercase text-primary">
                                     {usuario.nombre.charAt(0)}
                                     {usuario.apellido_paterno.charAt(0)}
                                 </div>
                             )}
                             <div>
-                                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-200 uppercase tracking-wide text-xs">
+                                <p className="text-xs font-medium uppercase tracking-wide text-neutral-900 dark:text-neutral-200">
                                     Estado de Cuenta
                                 </p>
-                                <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-500 uppercase mt-0.5">
+                                <p className="mt-0.5 text-sm font-semibold uppercase text-emerald-600 dark:text-emerald-500">
                                     {usuario.estado}
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </InfoSection>
 
-                    <hr className="border-neutral-200 dark:border-neutral-800" />
+                    <InfoSection title="Datos Personales" subtitle="Tu nombre legal y validación de identidad.">
+                        <InfoField
+                            label="Nombre Completo"
+                            value={`${usuario.nombre} ${usuario.apellido_paterno} ${usuario.apellido_materno || ""}`}
+                        />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-1">
-                            <AppTitle title="Datos Personales" subtitle="Tu nombre legal y validación de identidad." />
-                        </div>
-                        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Nombre Completo
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-200 mt-1">
-                                    {usuario.nombre} {usuario.apellido_paterno} {usuario.apellido_materno || ""}
-                                </p>
-                            </Field>
-
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Documento de Identidad
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-200 mt-1">
-                                    <span className="text-primary mr-1.5 font-bold">
+                        <InfoField
+                            label="Documento de Identidad"
+                            value={
+                                <>
+                                    <span className="mr-1.5 font-bold text-primary">
                                         {usuario.tipo_documento_identidad || "CI"}
                                     </span>
                                     {usuario.numero_documento || "No registrado"}
-                                </p>
-                            </Field>
+                                </>
+                            }
+                        />
 
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Fecha de Nacimiento
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-200 mt-1">
-                                    {usuario.fecha_nacimiento || "No registrada"}
-                                </p>
-                            </Field>
+                        <InfoField label="Fecha de Nacimiento" value={usuario.fecha_nacimiento || "No registrada"} />
 
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Género
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-200 mt-1">
-                                    {usuario.genero === "M" ? "Masculino" : usuario.genero === "F" ? "Femenino" : "No especificado"}
-                                </p>
-                            </Field>
+                        <InfoField
+                            label="Género"
+                            value={usuario.genero === "M" ? "Masculino" : usuario.genero === "F" ? "Femenino" : "No especificado"}
+                        />
 
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Rol de Acceso
-                                </FieldLabel>
-                                <p className="text-sm font-semibold text-primary uppercase mt-1 tracking-wide">
-                                    {usuario.ocupacion || "Usuario"}
-                                </p>
-                            </Field>
-                        </div>
-                    </div>
-                    <hr className="border-neutral-200 dark:border-neutral-800" />
+                        <InfoField
+                            label="Rol de Acceso"
+                            value={usuario.ocupacion || "Usuario"}
+                            valueClassName="mt-1 text-sm font-semibold uppercase tracking-wide text-primary"
+                        />
+                    </InfoSection>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-1">
-                            <AppTitle title="Contacto y Ubicación" subtitle="Canales de comunicación y residencia actual." />
-                        </div>
-                        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
-                            <Field className="sm:col-span-2">
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Correo Electrónico
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-200 mt-1 break-all">
-                                    {usuario.correo}
-                                </p>
-                            </Field>
+                    <InfoSection title="Contacto y Ubicación" subtitle="Canales de comunicación y residencia actual.">
+                        <InfoField
+                            label="Correo Electrónico"
+                            value={usuario.correo}
+                            className="sm:col-span-2"
+                            valueClassName="mt-1 break-all text-sm font-medium text-neutral-900 dark:text-neutral-200"
+                        />
 
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Teléfono / Celular
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200 mt-1">
-                                    {usuario.telefono || "No registrado"}
-                                </p>
-                            </Field>
+                        <InfoField label="Teléfono / Celular" value={usuario.telefono || "No registrado"} />
 
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-bold">
-                                    Ubicación
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200 mt-1">
-                                    {usuario.ciudad && usuario.pais ? `${usuario.ciudad}, ${usuario.pais}` : "No registrada"}
-                                </p>
-                            </Field>
-                        </div>
-                    </div>
+                        <InfoField
+                            label="Ubicación"
+                            value={usuario.ciudad && usuario.pais ? `${usuario.ciudad}, ${usuario.pais}` : "No registrada"}
+                        />
+                    </InfoSection>
 
-                    <hr className="border-neutral-200 dark:border-neutral-800" />
+                    <InfoSection title="Contacto de Emergencia" subtitle="Persona de respaldo ante eventualidades.">
+                        <InfoField label="Nombre de Contacto" value={usuario.contacto_emergencia_nombre || "No registrado"} />
+                        <InfoField label="Teléfono de Contacto" value={usuario.contacto_emergencia_telefono || "No registrado"} />
+                    </InfoSection>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-1">
-                            <AppTitle title="Contacto de Emergencia" subtitle="Persona de respaldo ante eventualidades." />
-                        </div>
-                        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 tracking-wider uppercase font-bold">
-                                    Nombre de Contacto
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200 mt-1">
-                                    {usuario.contacto_emergencia_nombre || "No registrado"}
-                                </p>
-                            </Field>
+                    <InfoSection title="Seguridad del Sistema" subtitle="Fechas de registro y accesos a la cuenta." withDivider={false}>
+                        <InfoField
+                            label="Miembro desde"
+                            value={new Date(usuario.created_at).toLocaleDateString()}
+                            valueClassName="mt-1 text-sm font-medium text-neutral-600 dark:text-neutral-400"
+                        />
 
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 tracking-wider uppercase font-bold">
-                                    Teléfono de Contacto
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200 mt-1">
-                                    {usuario.contacto_emergencia_telefono || "No registrado"}
-                                </p>
-                            </Field>
-                        </div>
-                    </div>
-
-                    <hr className="border-neutral-200 dark:border-neutral-800" />
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-1">
-                            <AppTitle title="Seguridad del Sistema" subtitle="Fechas de registro y accesos a la cuenta." />
-                        </div>
-                        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 tracking-wider uppercase font-bold">
-                                    Miembro desde
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mt-1">
-                                    {new Date(usuario.created_at).toLocaleDateString()}
-                                </p>
-                            </Field>
-
-                            <Field>
-                                <FieldLabel className="text-xs text-neutral-400 dark:text-neutral-500 tracking-wider uppercase font-bold">
-                                    Último Acceso Detectado
-                                </FieldLabel>
-                                <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mt-1">
-                                    {usuario.ultimo_acceso_en ? new Date(usuario.ultimo_acceso_en).toLocaleString() : "Sesión actual"}
-                                </p>
-                            </Field>
-                        </div>
-                    </div>
+                        <InfoField
+                            label="Último Acceso Detectado"
+                            value={usuario.ultimo_acceso_en ? new Date(usuario.ultimo_acceso_en).toLocaleString() : "Sesión actual"}
+                            valueClassName="mt-1 text-sm font-medium text-neutral-600 dark:text-neutral-400"
+                        />
+                    </InfoSection>
                 </div>
             )}
         </QueryState>
