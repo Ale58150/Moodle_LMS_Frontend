@@ -1,4 +1,3 @@
-// pages/Modulo/ModuloPage.tsx
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -13,6 +12,7 @@ import { ModuloType } from "@/features/Modulo/Schema/ModuloSchema";
 import { usePermission } from "@/hooks/usePermission";
 import { PERMISSIONS } from "@/utils/constants";
 import { DialogModulo } from "@/features/Modulo/Components/DialogModulo";
+import { AppTitle } from "@/components/common/Apptittle";
 
 export default function ModulosPage() {
     const { id: cursoId } = useParams<{ id: string }>();
@@ -75,8 +75,7 @@ export default function ModulosPage() {
 
             <div className="flex items-start justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Módulos</h1>
-                    <p className="text-muted-foreground">Módulos disponibles en este curso.</p>
+                    <AppTitle title="Módulos" subtitle="Módulos disponibles en este curso." />
                 </div>
 
                 {puedeCrear && (
