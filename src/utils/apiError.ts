@@ -14,6 +14,13 @@ export function getApiErrorCode(error: unknown): string | undefined {
     return undefined;
 }
 
+export function getApiErrorStatus(error: unknown): number | undefined {
+    if (axios.isAxiosError(error)) {
+        return error.response?.status;
+    }
+    return undefined;
+}
+
 export function getApiErrorMessage(error: unknown, fallback: string): string {
     if (axios.isAxiosError(error)) {
         const data = error.response?.data as ApiErrorBody | undefined;
