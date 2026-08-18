@@ -3,16 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { AppTitle } from "@/components/common/Apptittle";
+import { QueryState } from "@/components/common/QueryState";
 
 import { ModulosList } from "@/features/Modulo/Components/ModulosList";
 import { ModulosToolbar } from "@/features/Modulo/Components/ModulosToolbar";
-
+import { DialogModulo } from "@/features/Modulo/Components/DialogModulo";
 import { ModuloType } from "@/features/Modulo/Schema/ModuloSchema";
 
 import { usePermission } from "@/hooks/usePermission";
 import { PERMISSIONS } from "@/utils/constants";
-import { DialogModulo } from "@/features/Modulo/Components/DialogModulo";
-import { AppTitle } from "@/components/common/Apptittle";
 
 export default function ModulosPage() {
     const { id: cursoId } = useParams<{ id: string }>();
@@ -26,7 +26,6 @@ export default function ModulosPage() {
     const [moduloIdSeleccionado, setModuloIdSeleccionado] = useState<string | undefined>(undefined);
 
     const { can } = usePermission();
-
     const puedeCrear = can(PERMISSIONS.MODULOS.CREAR);
     const puedeEditar = can(PERMISSIONS.MODULOS.EDITAR);
     const puedeEliminar = can(PERMISSIONS.MODULOS.ELIMINAR);
@@ -52,14 +51,6 @@ export default function ModulosPage() {
         navigate(`/cursos/${cursoId}/modulos/${modulo.id}`);
     };
 
-    if (!cursoId) {
-        return (
-            <div className="flex min-h-[300px] items-center justify-center">
-                <p className="text-sm text-destructive">Curso no especificado.</p>
-            </div>
-        );
-    }
-
     return (
         <div className="space-y-6 p-6">
             <Button
@@ -73,41 +64,41 @@ export default function ModulosPage() {
                 Volver al curso
             </Button>
 
-            <div className="flex items-start justify-between gap-4">
-                <div>
+            <QueryState isLoading={false} isError={!cursoId} fallbackMessage="Curso no especificado.">
+                <div className="flex items-start justify-between gap-4">
                     <AppTitle title="Módulos" subtitle="Módulos disponibles en este curso." />
+
+                    {puedeCrear && (
+                        <Button type="button" onClick={abrirCrear}>
+                            Nuevo módulo
+                        </Button>
+                    )}
                 </div>
 
-                {puedeCrear && (
-                    <Button type="button" onClick={abrirCrear}>
-                        Nuevo módulo
-                    </Button>
-                )}
-            </div>
+                <ModulosToolbar
+                    search={search}
+                    onSearchChange={setSearch}
+                    onClear={limpiarFiltros}
+                    incluirNoPublicados={puedeEditar ? incluirNoPublicados : undefined}
+                    onIncluirNoPublicadosChange={puedeEditar ? setIncluirNoPublicados : undefined}
+                />
 
-            <ModulosToolbar
-                search={search}
-                onSearchChange={setSearch}
-                onClear={limpiarFiltros}
-                incluirNoPublicados={puedeEditar ? incluirNoPublicados : undefined}
-                onIncluirNoPublicadosChange={puedeEditar ? setIncluirNoPublicados : undefined}
-            />
-
-            <ModulosList
-                cursoId={cursoId}
-                search={search}
-                incluirNoPublicados={incluirNoPublicados}
-                onVer={verModulo}
-                onEditar={abrirEditar}
-                puedeEditar={puedeEditar}
-                puedeEliminar={puedeEliminar}
-            />
+                <ModulosList
+                    cursoId={cursoId!}
+                    search={search}
+                    incluirNoPublicados={incluirNoPublicados}
+                    onVer={verModulo}
+                    onEditar={abrirEditar}
+                    puedeEditar={puedeEditar}
+                    puedeEliminar={puedeEliminar}
+                />
+            </QueryState>
 
             <DialogModulo
                 open={open}
                 onOpenChange={setOpen}
                 mode={mode}
-                cursoId={cursoId}
+                cursoId={cursoId!}
                 moduloId={moduloIdSeleccionado}
             />
         </div>
