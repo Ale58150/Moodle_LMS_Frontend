@@ -1,6 +1,5 @@
-// features/Leccion/Components/LeccionBloqueadaDialog.tsx
 import { useNavigate } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -11,15 +10,36 @@ import {
     AlertDialogAction,
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { MascotSinPermiso, MascotError } from "@/components/common/mascots";
 
 interface LeccionBloqueadaDialogProps {
     open: boolean;
     motivo: "no_inscrito" | "leccion_anterior_pendiente" | null;
     cursoId: string;
     moduloId: string;
+    /** Nombre del módulo, para armar un mensaje de WhatsApp más claro. */
+    moduloNombre?: string;
 }
 
-export function LeccionBloqueadaDialog({ open, motivo, cursoId, moduloId }: LeccionBloqueadaDialogProps) {
+// Ajusta esto a tu número real (formato internacional, sin "+" ni espacios),
+// o muévelo a import.meta.env.VITE_WHATSAPP_CONTACTO si prefieres configurarlo por entorno.
+const WHATSAPP_NUMERO = "59170000000";
+
+function construirLinkWhatsapp(moduloNombre?: string) {
+    const mensaje = moduloNombre
+        ? `Hola, quiero inscribirme al módulo "${moduloNombre}" para poder acceder a sus lecciones.`
+        : "Hola, quiero inscribirme a un módulo para poder acceder a sus lecciones.";
+
+    return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
+}
+
+export function LeccionBloqueadaDialog({
+    open,
+    motivo,
+    cursoId,
+    moduloId,
+    moduloNombre,
+}: LeccionBloqueadaDialogProps) {
     const navigate = useNavigate();
     const esNoInscrito = motivo === "no_inscrito";
 
@@ -27,15 +47,21 @@ export function LeccionBloqueadaDialog({ open, motivo, cursoId, moduloId }: Lecc
         <AlertDialog open={open}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                        <Lock className="h-6 w-6 text-primary" />
+                    <div className="mx-auto">
+                        {esNoInscrito ? (
+                            <MascotSinPermiso className="h-28 w-auto" />
+                        ) : (
+                            <MascotError className="h-28 w-auto" />
+                        )}
                     </div>
+
                     <AlertDialogTitle className="text-center">
                         {esNoInscrito ? "Necesitas inscribirte a este módulo" : "Todavía no puedes ver esta lección"}
                     </AlertDialogTitle>
+
                     <AlertDialogDescription className="text-center">
                         {esNoInscrito
-                            ? "Esta lección no es de vista previa. Inscríbete al módulo para acceder a todo el contenido."
+                            ? "Esta lección no es de vista previa. Escríbenos para activar tu acceso a este módulo."
                             : "Completa la lección anterior para desbloquear esta."}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
@@ -46,8 +72,16 @@ export function LeccionBloqueadaDialog({ open, motivo, cursoId, moduloId }: Lecc
                     </AlertDialogCancel>
 
                     {esNoInscrito && (
-                        <AlertDialogAction onClick={() => navigate(`/cursos/${cursoId}`)}>
-                            Ver cómo inscribirme
+                        <AlertDialogAction asChild>
+                            <a
+                                href={construirLinkWhatsapp(moduloNombre)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="gap-1.5"
+                            >
+                                <MessageCircle className="h-4 w-4" />
+                                Escribir por WhatsApp
+                            </a>
                         </AlertDialogAction>
                     )}
                 </AlertDialogFooter>
