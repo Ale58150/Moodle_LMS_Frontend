@@ -60,8 +60,11 @@ export const LeccionDetailResponseSchema = LeccionSchema.extend({
         nombre: z.string(),
         cursoId: z.string(),
     }),
+    bloqueada: z.boolean(),
+    motivoBloqueo: z.enum(["no_inscrito", "leccion_anterior_pendiente"]).nullable(),
 });
 export type LeccionDetailType = z.infer<typeof LeccionDetailResponseSchema>;
+
 
 export const LeccionProgresoSchema = LeccionSchema.extend({
     recursos: z.array(RecursoLeccionSchema),

@@ -8,7 +8,8 @@ import { LeccionVideoPlayer } from "@/features/Leccion/Components/LeccionVideoPl
 import { RecursoViewer } from "@/features/Leccion/Components/RecursoViewer";
 import { LeccionCheckpointForm } from "@/features/Leccion/Components/LeccionCheckpointForm";
 import { LeccionesTimeline } from "@/features/Leccion/Components/LeccionesTimeline";
-import { useGetLeccion } from "@/features/Leccion/Hook/LeccionHook";
+import { LeccionBloqueadaDialog } from "@/features/Leccion/Components/LeccionBloqueadaDialog";
+import { useGetLeccion, useGetLeccionesConProgreso } from "@/features/Leccion/Hook/LeccionHook";
 
 export default function LeccionDetallePage() {
     const { id: cursoId, moduloId, leccionId } = useParams<{
@@ -19,6 +20,8 @@ export default function LeccionDetallePage() {
     const navigate = useNavigate();
 
     const { data: leccion, isLoading, isError } = useGetLeccion(leccionId!);
+
+    const { data: leccionesProgreso } = useGetLeccionesConProgreso(moduloId!);
 
     if (isLoading) {
         return (
@@ -36,6 +39,26 @@ export default function LeccionDetallePage() {
         );
     }
 
+    // Bloqueada según el propio backend (GET /lecciones/:id ya lo resuelve
+    // considerando inscripción + secuencialidad). No se renderiza nada más.
+    if (leccion.bloqueada) {
+        return (
+            <LeccionBloqueadaDialog
+                open
+                motivo={leccion.motivoBloqueo}
+                cursoId={cursoId!}
+                moduloId={moduloId!}
+            />
+        );
+    }
+
+    const indexActual = leccionesProgreso?.findIndex((l) => l.id === leccionId) ?? -1;
+    const estaCompletada = indexActual >= 0 ? leccionesProgreso![indexActual].completada : false;
+    const siguienteLeccionId =
+        indexActual >= 0 && indexActual < (leccionesProgreso?.length ?? 0) - 1
+            ? leccionesProgreso![indexActual + 1].id
+            : undefined;
+
     const contenidoSeguro = leccion.contenidoHtml ? DOMPurify.sanitize(leccion.contenidoHtml) : null;
 
     return (
@@ -51,6 +74,8 @@ export default function LeccionDetallePage() {
                 Volver al módulo
             </Button>
 
+            {/* Punto 2: sin lg:sticky -> el aside se desplaza junto con el
+                contenido en vez de quedarse fijo mientras el texto scrollea. */}
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
                 <div className="min-w-0 flex-1 space-y-6">
                     <h1 className="text-xl font-bold tracking-tight sm:text-2xl">{leccion.nombre}</h1>
@@ -79,12 +104,15 @@ export default function LeccionDetallePage() {
 
                     <LeccionCheckpointForm
                         leccionId={leccion.id}
-                        onCompletada={() => {
-                        }}
+                        cursoId={cursoId!}
+                        moduloId={moduloId!}
+                        estaCompletada={estaCompletada}
+                        siguienteLeccionId={siguienteLeccionId}
+                        onNavigateSiguiente={(id) => navigate(`/cursos/${cursoId}/modulos/${moduloId}/lecciones/${id}`)}
                     />
                 </div>
 
-                <aside className="w-full shrink-0 lg:sticky lg:top-6 lg:w-80">
+                <aside className="w-full shrink-0 lg:w-80">
                     <LeccionesTimeline moduloId={moduloId!} />
                 </aside>
             </div>
