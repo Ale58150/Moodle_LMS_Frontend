@@ -1,18 +1,20 @@
+import { ReactNode } from "react";
+
 interface AppTitleProps {
     title: string;
     subtitle?: string;
+    badge?: ReactNode;
 }
 
-export function AppTitle({ title, subtitle }: AppTitleProps) {
+export function AppTitle({ title, subtitle, badge }: AppTitleProps) {
     return (
         <div>
-            <h1 className="text-lg font-bold tracking-wide text-primary">
-                {title}
-            </h1>
+            <div className="flex items-center gap-2">
+                <h1 className="text-lg font-bold tracking-wide text-primary">{title}</h1>
+                {badge}
+            </div>
 
-            <p className="text-xs text-muted-foreground">
-                {subtitle}
-            </p>
+            {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
         </div>
     );
 }
