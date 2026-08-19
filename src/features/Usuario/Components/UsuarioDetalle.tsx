@@ -3,13 +3,6 @@
 import { useState } from "react";
 import {
     ArrowLeft,
-    Mail,
-    Phone,
-    User,
-    MapPin,
-    Briefcase,
-    IdCard,
-    Shield,
     Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +22,9 @@ import {
 import { UsuarioDetailType } from "../Schema/UsuarioSchema";
 import { FormUsuario } from "./FormUsuario";
 import { AppTitle } from "@/components/common/Apptittle";
+import { InfoSection } from "@/components/common/info/InfoSection";
+import { InfoField } from "@/components/common/info/InfoField";
+
 
 interface UsuarioDetalleProps {
     usuario: UsuarioDetailType;
@@ -100,209 +96,121 @@ export function UsuarioDetalle({
                 </CardHeader>
 
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="flex gap-3">
-                            <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <InfoSection
+                        title="Información personal"
+                        subtitle="Datos personales y de contacto del usuario"
+                        withDivider={false}
+                    >
+                        <InfoField
+                            label="Nombre completo"
+                            value={nombreCompleto || "-"}
+                        />
 
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Nombre completo
-                                </p>
+                        <InfoField
+                            label="Usuario"
+                            value={usuario.username}
+                        />
 
-                                <p className="font-medium">
-                                    {nombreCompleto || "-"}
-                                </p>
-                            </div>
-                        </div>
+                        <InfoField
+                            label="Correo"
+                            value={usuario.correo}
+                        />
 
-                        <div className="flex gap-3">
-                            <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                        <InfoField
+                            label="Teléfono"
+                            value={perfil?.telefono || "-"}
+                        />
 
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Usuario
-                                </p>
+                        <InfoField
+                            label="Documento"
+                            value={
+                                [
+                                    perfil?.tipoDocumentoIdentidad,
+                                    perfil?.numeroDocumento,
+                                ]
+                                    .filter(Boolean)
+                                    .join(" ") || "-"
+                            }
+                        />
 
-                                <p className="font-medium">
-                                    {usuario.username}
-                                </p>
-                            </div>
-                        </div>
+                        <InfoField
+                            label="Ciudad"
+                            value={perfil?.ciudad || "-"}
+                        />
 
-                        <div className="flex gap-3">
-                            <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
+                        <InfoField
+                            label="País"
+                            value={perfil?.pais || "-"}
+                        />
 
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Correo
-                                </p>
+                        <InfoField
+                            label="Ocupación"
+                            value={perfil?.ocupacion || "-"}
+                        />
 
-                                <p className="font-medium">
-                                    {usuario.correo}
-                                </p>
-                            </div>
-                        </div>
+                        <InfoField
+                            label="Rol"
+                            value={rol}
+                        />
 
-                        <div className="flex gap-3">
-                            <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
-
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Teléfono
-                                </p>
-
-                                <p className="font-medium">
-                                    {perfil?.telefono || "-"}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <IdCard className="h-5 w-5 text-muted-foreground mt-0.5" />
-
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Documento
-                                </p>
-
-                                <p className="font-medium">
-                                    {[
-                                        perfil?.tipoDocumentoIdentidad,
-                                        perfil?.numeroDocumento,
-                                    ]
-                                        .filter(Boolean)
-                                        .join(" ") || "-"}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Ciudad
-                                </p>
-
-                                <p className="font-medium">
-                                    {perfil?.ciudad || "-"}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    País
-                                </p>
-
-                                <p className="font-medium">
-                                    {perfil?.pais || "-"}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <Briefcase className="h-5 w-5 text-muted-foreground mt-0.5" />
-
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Ocupación
-                                </p>
-
-                                <p className="font-medium">
-                                    {perfil?.ocupacion || "-"}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
-
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Rol
-                                </p>
-
-                                <p className="font-medium">
-                                    {rol}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
-
-                            <div>
-                                <p className="text-sm text-muted-foreground">
-                                    Contacto de emergencia
-                                </p>
-
-                                <p className="font-medium">
-                                    {perfil?.contactoEmergenciaNombre || "-"}
-                                </p>
-
-                                {perfil?.contactoEmergenciaTelefono && (
-                                    <p className="text-sm text-muted-foreground">
-                                        {perfil.contactoEmergenciaTelefono}
+                        <InfoField
+                            label="Contacto de emergencia"
+                            value={
+                                <div>
+                                    <p>
+                                        {perfil?.contactoEmergenciaNombre || "-"}
                                     </p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+
+                                    {perfil?.contactoEmergenciaTelefono && (
+                                        <p className="text-sm text-muted-foreground">
+                                            {perfil.contactoEmergenciaTelefono}
+                                        </p>
+                                    )}
+                                </div>
+                            }
+                        />
+                    </InfoSection>
                 </CardContent>
             </Card>
 
             <Card>
-                <CardHeader>
-                    <CardTitle>
-                        Información adicional
-                    </CardTitle>
-                </CardHeader>
-
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <p className="text-sm text-muted-foreground">
-                                ID de usuario
-                            </p>
+                    <InfoSection
+                        title="Información adicional"
+                        subtitle="Información técnica y de registro del usuario"
+                        withDivider={false}
+                    >
+                        <InfoField
+                            label="ID de usuario"
+                            value={usuario.id}
+                            valueClassName="mt-1 break-all font-mono text-sm text-neutral-900 dark:text-neutral-200"
+                        />
 
-                            <p className="font-mono text-sm mt-1 break-all">
-                                {usuario.id}
-                            </p>
-                        </div>
-
-                        <div>
-                            <p className="text-sm text-muted-foreground">
-                                Fecha de creación
-                            </p>
-
-                            <p className="font-medium mt-1">
-                                {usuario.createdAt
+                        <InfoField
+                            label="Fecha de creación"
+                            value={
+                                usuario.createdAt
                                     ? new Date(
                                         usuario.createdAt
                                     ).toLocaleDateString()
-                                    : "-"}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">
-                                Última actualización
-                            </p>
+                                    : "-"
+                            }
+                        />
 
-                            <p className="font-medium mt-1">
-                                {usuario.updatedAt
+                        <InfoField
+                            label="Última actualización"
+                            value={
+                                usuario.updatedAt
                                     ? new Date(
                                         usuario.updatedAt
                                     ).toLocaleDateString()
-                                    : "-"}
-                            </p>
-                        </div>
-                    </div>
+                                    : "-"
+                            }
+                        />
+                    </InfoSection>
                 </CardContent>
             </Card>
+
             <Dialog
                 open={openEdit}
                 onOpenChange={setOpenEdit}
