@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { UsuarioDetailType } from "../Schema/UsuarioSchema";
 import { FormUsuario } from "./FormUsuario";
+import { AppTitle } from "@/components/common/Apptittle";
 
 interface UsuarioDetalleProps {
     usuario: UsuarioDetailType;
@@ -65,13 +66,7 @@ export function UsuarioDetalle({
                     </Button>
 
                     <div>
-                        <h1 className="text-2xl font-semibold">
-                            Detalle del usuario
-                        </h1>
-
-                        <p className="text-sm text-muted-foreground">
-                            Información completa del usuario
-                        </p>
+                        <AppTitle title="Detalle del usuario" subtitle="Información completa del usuario" />
                     </div>
                 </div>
 

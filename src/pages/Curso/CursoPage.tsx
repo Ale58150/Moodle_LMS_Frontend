@@ -1,8 +1,8 @@
-// pages/Curso/CursoPage.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import { AppTitle } from "@/components/common/Apptittle";
 
 import { CursosList } from "@/features/Curso/Components/CursosList";
 import { CursosToolbar } from "@/features/Curso/Components/CursosToolbar";
@@ -53,10 +53,7 @@ export default function CursosPage() {
     return (
         <div className="space-y-6 p-6">
             <div className="flex items-start justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Cursos</h1>
-                    <p className="text-muted-foreground">Explora y administra los cursos disponibles.</p>
-                </div>
+                <AppTitle title="Cursos" subtitle="Explora y administra los cursos disponibles." />
 
                 {puedeCrear && (
                     <Button type="button" onClick={abrirCrear}>

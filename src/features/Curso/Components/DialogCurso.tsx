@@ -1,13 +1,6 @@
 "use client";
 
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-
+import { EntityDialog } from "@/components/common/form/EntityDialog";
 import { FormCurso } from "./FormCurso";
 import { CursoType } from "../Schema/CursoSchema";
 
@@ -18,38 +11,19 @@ interface DialogCursoProps {
     initialData?: CursoType;
 }
 
-export function DialogCurso({
-    open,
-    onOpenChange,
-    mode,
-    initialData,
-}: DialogCursoProps) {
+export function DialogCurso({ open, onOpenChange, mode, initialData }: DialogCursoProps) {
     return (
-        <Dialog
+        <EntityDialog
             open={open}
             onOpenChange={onOpenChange}
+            mode={mode}
+            titleCreate="Nuevo curso"
+            titleEdit="Editar curso"
+            descriptionCreate="Completa la información para crear un nuevo curso."
+            descriptionEdit="Modifica la información del curso."
+            maxWidth="max-w-3xl"
         >
-            <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-auto">
-                <DialogHeader>
-                    <DialogTitle>
-                        {mode === "edit"
-                            ? "Editar curso"
-                            : "Nuevo curso"}
-                    </DialogTitle>
-
-                    <DialogDescription>
-                        {mode === "edit"
-                            ? "Modifica la información del curso."
-                            : "Completa la información para crear un nuevo curso."}
-                    </DialogDescription>
-                </DialogHeader>
-
-                <FormCurso
-                    mode={mode}
-                    initialData={initialData}
-                    onSuccess={() => onOpenChange(false)}
-                />
-            </DialogContent>
-        </Dialog>
+            <FormCurso mode={mode} initialData={initialData} onSuccess={() => onOpenChange(false)} />
+        </EntityDialog>
     );
 }

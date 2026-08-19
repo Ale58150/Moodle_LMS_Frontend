@@ -22,6 +22,7 @@ import {
     RecursoLeccionCreateType,
     RecursoLeccionUpdateType,
 } from "../Schema/LeccionSchema";
+import { getApiErrorCode, getApiErrorMessage } from "@/utils/apiError";
 
 export function useGetLecciones(
     moduloId: string,
@@ -121,16 +122,18 @@ export function useMarcarLeccionCompletada() {
     return useMutation({
         mutationFn: ({ id, respuestas }: { id: string; respuestas?: { preguntaFormularioId: string; opcionFormularioId: string }[] }) =>
             MarcarLeccionCompletada(id, respuestas),
-        onSuccess: (response) => {
-            toast.success(response.message || "¡Lección completada!");
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["lecciones", "progreso"] });
         },
-        onError: () => {
-            const mensaje = "No se pudo completar la lección.";
-            toast.error(mensaje);
+        onError: (error: unknown) => {
+            const code = getApiErrorCode(error);
+            if (code === "no_inscrito" || code === "leccion_anterior_pendiente") return;
+
+            toast.error(getApiErrorMessage(error, "No se pudo completar la lección."));
         },
     });
 }
+
 
 export function useGetFormularioLeccion(leccionId: string, enabled = true) {
     return useQuery({
