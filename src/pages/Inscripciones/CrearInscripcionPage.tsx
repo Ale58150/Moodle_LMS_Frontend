@@ -2,7 +2,7 @@ import { CrearInscripcionForm } from "@/features/Inscripciones/Components/crear_
 
 export const CrearInscripcionPage = () => {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        <div className="flex items-center h-[calc(100vh-64px)] justify-center bg-muted/40 px-4">
             <div className="w-full max-w-md">
                 <CrearInscripcionForm />
             </div>
