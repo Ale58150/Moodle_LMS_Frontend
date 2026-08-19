@@ -1,6 +1,6 @@
 import { apiService } from "@/api/api";
 import { ResponseType } from "@/utils/Schema/Response";
-import { UserCreateType, UserIndexResponseType, UserUpdateType } from "../Schema/UsuarioSchema";
+import { UserCreateType, UserIndexResponseType, UserUpdateType, UsuarioDetailType } from "../Schema/UsuarioSchema";
 
 
 export async function GetPaginatedUsers(page: number, limit: number = 10): Promise<UserIndexResponseType> {
@@ -8,21 +8,20 @@ export async function GetPaginatedUsers(page: number, limit: number = 10): Promi
     return response.data;
 }
 
-export async function GetUserById(id: string): Promise<{ success: boolean; data: UsuarioType }> {
-    const response = await apiService.get(`/usuario/usuarios/${id}`);
+export async function GetUserById(id: string): Promise<UsuarioDetailType> {
+    const response = await apiService.get(`/user/${id}`);
     return response.data;
 }
 
-export async function CreateUser(data: UserCreateType): Promise<{ success: boolean; message: string; data: UsuarioType }> {
-    const response = await apiService.post("/usuario/usuarios", data);
+export async function CreateUser(data: UserCreateType): Promise<ResponseType> {
+    const response = await apiService.post("/user", data);
     return response.data;
 }
 
-export async function UpdateUser(id: string, data: UserUpdateType): Promise<{ success: boolean; message: string; data: UsuarioType }> {
-    const response = await apiService.patch(`/usuario/usuarios/${id}`, data);
+export async function UpdateUser(id: string, data: UserUpdateType): Promise<ResponseType> {
+    const response = await apiService.patch(`/user/${id}`, data);
     return response.data;
 }
-
 export async function DeleteUserLogically(id: string): Promise<ResponseType> {
     const response = await apiService.delete(`/user/${id}`);
     return response.data;

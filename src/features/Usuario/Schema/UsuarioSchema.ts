@@ -12,26 +12,90 @@ export const UsuarioIndexSchema = z.object({
 
 export type UsuarioIndexType = z.infer<typeof UsuarioIndexSchema>;
 export const UserIndexResponseSchema = createPaginatedResponseSchema(UsuarioIndexSchema);
-
 export type UserIndexResponseType = z.infer<typeof UserIndexResponseSchema>;
 
+export const UserCreateSchema = z.object({
+    nombre: z.string().min(1, "El nombre es obligatorio"),
+    apellidoPaterno: z.string().min(1, "El apellido paterno es obligatorio"),
+    apellidoMaterno: z.string().optional(), correo: z.string().email("Formato de correo inválido"),
+    numeroDocumento: z.string().min(1, "El número de documento es obligatorio"),
+    rolId: z.string().min(1, "Selecciona un rol"),
+});
 
-export const UserCreateSchema = UsuarioIndexSchema
-    .omit({
-        id_usuario: true,
-        estado: true,
-        created_at: true,
-        updated_at: true
-    })
-    .extend({
-        rol: z.enum(["administrador", "estudiante", "docente"], {
-            message: "Selecciona un rol válido"
+export type UserCreateType = z.infer<
+    typeof UserCreateSchema
+>;
+
+export const UsuarioDetailSchema = z.object({
+    id: z.string(),
+    username: z.string(),
+    correo: z.string().email(),
+    estado: z.string(),
+    correoVerificadoEn: z.string().nullable(),
+    ultimoAccesoEn: z.string().nullable(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+
+    perfil: z.object({
+        id: z.string(),
+        usuarioId: z.string(),
+        nombre: z.string(),
+        apellidoPaterno: z.string().nullable(),
+        apellidoMaterno: z.string().nullable(),
+        telefono: z.string().nullable(),
+        tipoDocumentoIdentidad: z.string().nullable(),
+        numeroDocumento: z.string().nullable(),
+        fechaNacimiento: z.string().nullable(),
+        genero: z.string().nullable(),
+        ciudad: z.string().nullable(),
+        pais: z.string().nullable(),
+        ocupacion: z.string().nullable(),
+        contactoEmergenciaNombre: z.string().nullable(),
+        contactoEmergenciaTelefono: z.string().nullable(),
+        fotografiaRuta: z.string().nullable(),
+        creadoEn: z.string(),
+        actualizadoEn: z.string(),
+    }).nullable(),
+
+    roles: z.array(
+        z.object({
+            usuarioId: z.string(),
+            rolId: z.string(),
+            asignadoPor: z.string().nullable(),
+            asignadoEn: z.string(),
+            rol: z.object({
+                id: z.string(),
+                nombre: z.string(),
+                descripcion: z.string().nullable(),
+                estado: z.string(),
+                creadoEn: z.string(),
+                actualizadoEn: z.string(),
+            }),
         })
-    });
+    ),
+});
 
-export type UserCreateType = z.infer<typeof UserCreateSchema>;
+export type UsuarioDetailType = z.infer<typeof UsuarioDetailSchema>;
 
-
-export const UserUpdateSchema = UserCreateSchema.partial();
+export const UserUpdateSchema = z.object({
+    username: z.string().min(1, "El username es obligatorio"),
+    correo: z.string().email("Formato de correo inválido"),
+    estado: z.string().min(1, "El estado es obligatorio"),
+    nombre: z.string().min(1, "El nombre es obligatorio"),
+    apellidoPaterno: z.string().optional(),
+    apellidoMaterno: z.string().optional(),
+    telefono: z.string().optional(),
+    tipoDocumentoIdentidad: z.string().optional(),
+    numeroDocumento: z.string().optional(),
+    fechaNacimiento: z.string().optional(),
+    genero: z.string().optional(),
+    ciudad: z.string().optional(),
+    pais: z.string().optional(),
+    ocupacion: z.string().optional(),
+    contactoEmergenciaNombre: z.string().optional(),
+    contactoEmergenciaTelefono: z.string().optional(),
+    fotografiaRuta: z.string().optional(),
+    rolId: z.string().min(1, "Selecciona un rol"),
+});
 
 export type UserUpdateType = z.infer<typeof UserUpdateSchema>;

@@ -23,8 +23,7 @@ import { PERMISSIONS } from "@/utils/constants";
 
 export default function UsuarioPage() {
     const [page, setPage] = useState(1);
-    const [selectedUser, setSelectedUser] =
-        useState<UsuarioIndexType | undefined>(undefined);
+    const [selectedUser, setSelectedUser] = useState<UsuarioIndexType | undefined>(undefined);
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const navigate = useNavigate();
@@ -39,8 +38,6 @@ export default function UsuarioPage() {
     } = useGetUsers(page, perPage);
 
     const deleteUser = useDeleteUser();
-
-    // Permiso para acceder a la página
     if (!can(PERMISSIONS.USUARIOS.VER)) {
         return (
             <div className="space-y-6">
@@ -58,27 +55,18 @@ export default function UsuarioPage() {
         setDialogOpen(true);
     };
 
-    const handleEdit = (usuario: UsuarioIndexType) => {
-        setSelectedUser(usuario);
-        setDialogOpen(true);
-    };
 
     const handleDelete = (id: string) => {
         deleteUser.mutate(id);
     };
 
     const columns = UsuarioColumns({
-        onEdit: handleEdit,
 
         onView: (id: string) => {
             navigate(`/usuario/${id}`);
         },
 
         onDelete: handleDelete,
-
-        canEdit: can(
-            PERMISSIONS.USUARIOS.EDITAR
-        ),
 
         canDelete: can(
             PERMISSIONS.USUARIOS.ELIMINAR
@@ -174,7 +162,7 @@ export default function UsuarioPage() {
                 open={dialogOpen}
                 onOpenChange={setDialogOpen}
                 mode={selectedUser ? "edit" : "create"}
-                initialData={selectedUser}
+                userId={selectedUser?.id}
             />
 
         </div>

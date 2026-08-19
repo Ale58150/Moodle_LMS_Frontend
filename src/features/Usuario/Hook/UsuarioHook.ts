@@ -11,14 +11,13 @@ export function useGetUsers(page: number, limit: number = 10) {
     });
 }
 
-export function useGetUser(id: string, enabled: boolean = true) {
+export function useGetUser(id: string, enabled = true) {
     return useQuery({
         queryKey: ["users", "detail", id],
         queryFn: () => GetUserById(id),
-        enabled: enabled && id != null,
+        enabled: enabled && !!id,
     });
 }
-
 export function useCreateUser() {
     const queryClient = useQueryClient();
 
@@ -47,18 +46,36 @@ export function useUpdateUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ id, data }: { id: string; data: UserUpdateType }) => UpdateUser(id, data),
+        mutationFn: ({
+            id,
+            data,
+        }: {
+            id: string;
+            data: UserUpdateType;
+        }) => UpdateUser(id, data),
+
         onSuccess: (response, variables) => {
-            toast.success(response.message || "Usuario actualizado con éxito");
-            queryClient.invalidateQueries({ queryKey: ["users", "list"] });
-            queryClient.invalidateQueries({ queryKey: ["users", "detail", variables.id] });
+            toast.success(
+                response.message ||
+                "Usuario actualizado con éxito"
+            );
+
+            queryClient.invalidateQueries({
+                queryKey: ["users", "list"],
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["users", "detail", variables.id],
+            });
         },
+
         onError: () => {
-            toast.error("Error al procesar la solicitud de actualización");
-        }
+            toast.error(
+                "Error al procesar la solicitud de actualización"
+            );
+        },
     });
 }
-
 export function useDeleteUser() {
     const queryClient = useQueryClient();
 

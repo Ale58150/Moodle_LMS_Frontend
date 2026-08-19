@@ -1,419 +1,143 @@
 "use client";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { ColumnDef } from "@tanstack/react-table";
+import {
+    MoreHorizontal,
+    Pencil,
+    Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import {
-    Field,
-    FieldGroup,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { UsuarioIndexType } from "../Schema/UsuarioSchema";
 
-import {
-    UserCreateSchema,
-    UserCreateType,
-    UsuarioType,
-} from "../Schema/UsuarioSchema";
-
-import {
-    useCreateUser,
-    useUpdateUser,
-} from "../Hook/UsuarioHook";
-
-interface UsuarioDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    usuario?: UsuarioType | null;
+interface UsuarioColumnsProps {
+    onEdit: (usuario: UsuarioIndexType) => void;
+    onDelete: (id: string) => void;
+    canEdit: boolean;
+    canDelete: boolean;
 }
 
-export function UsuarioDialog({
-    open,
-    onOpenChange,
-    usuario,
-}: UsuarioDialogProps) {
-    const isEditing = !!usuario;
-
-    const createUser = useCreateUser();
-    const updateUser = useUpdateUser();
-
-    const form = useForm<UserCreateType>({
-        resolver: zodResolver(UserCreateSchema),
-        defaultValues: {
-            nombre: "",
-            apellido_paterno: "",
-            apellido_materno: "",
-            correo: "",
-            tipo_documento_identidad: "",
-            numero_documento: "",
-            telefono: "",
-            ciudad: "",
-            pais: "",
-            ocupacion: "",
-            contacto_emergencia_nombre: "",
-            contacto_emergencia_telefono: "",
-            rol: "estudiante",
+export function UsuarioColumns({
+    onEdit,
+    onDelete,
+    canEdit,
+    canDelete,
+}: UsuarioColumnsProps): ColumnDef<UsuarioIndexType>[] {
+    return [
+        {
+            accessorKey: "username",
+            header: "Usuario",
         },
-    });
+        {
+            accessorKey: "correo",
+            header: "Correo",
+        },
+        {
+            accessorKey: "estado",
+            header: "Estado",
+            cell: ({ row }) => {
+                const estado = row.original.estado.toLowerCase();
 
-    useEffect(() => {
-        if (usuario) {
-            form.reset({
-                nombre: usuario.nombre,
-                apellido_paterno: usuario.apellido_paterno,
-                apellido_materno: usuario.apellido_materno ?? "",
-                correo: usuario.correo,
-                tipo_documento_identidad:
-                    usuario.tipo_documento_identidad,
-                numero_documento: usuario.numero_documento,
-                telefono: usuario.telefono ?? "",
-                ciudad: usuario.ciudad ?? "",
-                pais: usuario.pais ?? "",
-                ocupacion: usuario.ocupacion ?? "",
-                contacto_emergencia_nombre:
-                    usuario.contacto_emergencia_nombre ?? "",
-                contacto_emergencia_telefono:
-                    usuario.contacto_emergencia_telefono ?? "",
-                rol: "estudiante",
-            });
-        } else {
-            form.reset({
-                nombre: "",
-                apellido_paterno: "",
-                apellido_materno: "",
-                correo: "",
-                tipo_documento_identidad: "",
-                numero_documento: "",
-                telefono: "",
-                ciudad: "",
-                pais: "",
-                ocupacion: "",
-                contacto_emergencia_nombre: "",
-                contacto_emergencia_telefono: "",
-                rol: "estudiante",
-            });
-        }
-    }, [usuario, open]);
-
-    const onSubmit = (data: UserCreateType) => {
-        if (isEditing && usuario) {
-            updateUser.mutate(
-                {
-                    id: usuario.id_usuario,
-                    data,
-                },
-                {
-                    onSuccess: () => {
-                        onOpenChange(false);
-                    },
-                }
-            );
-
-            return;
-        }
-
-        createUser.mutate(data, {
-            onSuccess: () => {
-                onOpenChange(false);
-                form.reset();
+                return (
+                    <Badge
+                        variant={
+                            estado === "activo"
+                                ? "default"
+                                : "secondary"
+                        }
+                    >
+                        {row.original.estado}
+                    </Badge>
+                );
             },
-        });
-    };
+        },
+        {
+            accessorKey: "correoVerificadoEn",
+            header: "Correo verificado",
+            cell: ({ row }) => (
+                <span>
+                    {row.original.correoVerificadoEn
+                        ? "Sí"
+                        : "No"}
+                </span>
+            ),
+        },
+        {
+            accessorKey: "updatedAt",
+            header: "Última actualización",
+            cell: ({ row }) => (
+                <span>
+                    {new Date(
+                        row.original.updatedAt
+                    ).toLocaleDateString()}
+                </span>
+            ),
+        },
+        {
+            id: "acciones",
+            header: "Acciones",
+            cell: ({ row }) => {
+                const usuario = row.original;
 
-    const isPending =
-        createUser.isPending || updateUser.isPending;
+                if (!canEdit && !canDelete) {
+                    return null;
+                }
 
-    return (
-        <Dialog
-            open={open}
-            onOpenChange={onOpenChange}
-        >
-            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                >
-                    <DialogHeader>
-                        <DialogTitle>
-                            {isEditing
-                                ? "Editar usuario"
-                                : "Nuevo usuario"}
-                        </DialogTitle>
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                className="h-8 w-8 p-0"
+                            >
+                                <span className="sr-only">
+                                    Abrir menú
+                                </span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
 
-                        <DialogDescription>
-                            {isEditing
-                                ? "Modifica los datos del usuario."
-                                : "Completa los datos para crear un nuevo usuario."}
-                        </DialogDescription>
-                    </DialogHeader>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>
+                                Acciones
+                            </DropdownMenuLabel>
 
-                    <FieldGroup className="py-6">
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                            <Field>
-                                <Label htmlFor="nombre">
-                                    Nombre
-                                </Label>
+                            <DropdownMenuSeparator />
 
-                                <Input
-                                    id="nombre"
-                                    {...form.register("nombre")}
-                                />
-
-                                {form.formState.errors.nombre && (
-                                    <p className="text-sm text-red-500">
-                                        {
-                                            form.formState
-                                                .errors.nombre
-                                                .message
-                                        }
-                                    </p>
-                                )}
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="apellido_paterno">
-                                    Apellido paterno
-                                </Label>
-
-                                <Input
-                                    id="apellido_paterno"
-                                    {...form.register(
-                                        "apellido_paterno"
-                                    )}
-                                />
-
-                                {form.formState.errors
-                                    .apellido_paterno && (
-                                        <p className="text-sm text-red-500">
-                                            {
-                                                form.formState
-                                                    .errors
-                                                    .apellido_paterno
-                                                    .message
-                                            }
-                                        </p>
-                                    )}
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="apellido_materno">
-                                    Apellido materno
-                                </Label>
-
-                                <Input
-                                    id="apellido_materno"
-                                    {...form.register(
-                                        "apellido_materno"
-                                    )}
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="correo">
-                                    Correo
-                                </Label>
-
-                                <Input
-                                    id="correo"
-                                    type="email"
-                                    {...form.register("correo")}
-                                />
-
-                                {form.formState.errors.correo && (
-                                    <p className="text-sm text-red-500">
-                                        {
-                                            form.formState
-                                                .errors.correo
-                                                .message
-                                        }
-                                    </p>
-                                )}
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="tipo_documento_identidad">
-                                    Tipo de documento
-                                </Label>
-
-                                <Input
-                                    id="tipo_documento_identidad"
-                                    {...form.register(
-                                        "tipo_documento_identidad"
-                                    )}
-                                    placeholder="CI"
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="numero_documento">
-                                    Número de documento
-                                </Label>
-
-                                <Input
-                                    id="numero_documento"
-                                    {...form.register(
-                                        "numero_documento"
-                                    )}
-                                />
-
-                                {form.formState.errors
-                                    .numero_documento && (
-                                        <p className="text-sm text-red-500">
-                                            {
-                                                form.formState
-                                                    .errors
-                                                    .numero_documento
-                                                    .message
-                                            }
-                                        </p>
-                                    )}
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="telefono">
-                                    Teléfono
-                                </Label>
-
-                                <Input
-                                    id="telefono"
-                                    {...form.register("telefono")}
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="ciudad">
-                                    Ciudad
-                                </Label>
-
-                                <Input
-                                    id="ciudad"
-                                    {...form.register("ciudad")}
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="pais">
-                                    País
-                                </Label>
-
-                                <Input
-                                    id="pais"
-                                    {...form.register("pais")}
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="ocupacion">
-                                    Ocupación
-                                </Label>
-
-                                <Input
-                                    id="ocupacion"
-                                    {...form.register("ocupacion")}
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="contacto_emergencia_nombre">
-                                    Contacto de emergencia
-                                </Label>
-
-                                <Input
-                                    id="contacto_emergencia_nombre"
-                                    {...form.register(
-                                        "contacto_emergencia_nombre"
-                                    )}
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="contacto_emergencia_telefono">
-                                    Teléfono de emergencia
-                                </Label>
-
-                                <Input
-                                    id="contacto_emergencia_telefono"
-                                    {...form.register(
-                                        "contacto_emergencia_telefono"
-                                    )}
-                                />
-                            </Field>
-
-                            <Field>
-                                <Label htmlFor="rol">
-                                    Rol
-                                </Label>
-
-                                <Select
-                                    value={form.watch("rol")}
-                                    onValueChange={(value) =>
-                                        form.setValue(
-                                            "rol",
-                                            value as UserCreateType["rol"]
-                                        )
+                            {canEdit && (
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        onEdit(usuario)
                                     }
                                 >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecciona un rol" />
-                                    </SelectTrigger>
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    Editar
+                                </DropdownMenuItem>
+                            )}
 
-                                    <SelectContent>
-                                        <SelectItem value="administrador">
-                                            Administrador
-                                        </SelectItem>
-
-                                        <SelectItem value="docente">
-                                            Docente
-                                        </SelectItem>
-
-                                        <SelectItem value="estudiante">
-                                            Estudiante
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </Field>
-                        </div>
-                    </FieldGroup>
-
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                disabled={isPending}
-                            >
-                                Cancelar
-                            </Button>
-                        </DialogClose>
-
-                        <Button
-                            type="submit"
-                            disabled={isPending}
-                        >
-                            {isPending
-                                ? "Guardando..."
-                                : isEditing
-                                    ? "Guardar cambios"
-                                    : "Crear usuario"}
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
+                            {canDelete && (
+                                <DropdownMenuItem
+                                    className="text-red-600"
+                                    onClick={() =>
+                                        onDelete(usuario.id)
+                                    }
+                                >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Eliminar
+                                </DropdownMenuItem>
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                );
+            },
+        },
+    ];
 }

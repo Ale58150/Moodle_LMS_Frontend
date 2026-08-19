@@ -12,9 +12,18 @@ import {
 } from "@/components/ui/card";
 import {
     Field,
+    FieldError,
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import {
     CrearInscripcionSchema,
@@ -25,6 +34,7 @@ import {
     useCursos,
     useEstudiantes,
 } from "../Hook/InscripcionHook";
+import { DialogEstudiante } from "./DialogEstudiante";
 
 export function CrearInscripcionForm() {
     const crearInscripcionMutation = useCrearInscripcion();
@@ -32,6 +42,7 @@ export function CrearInscripcionForm() {
     const { data: estudiantes = [], isLoading: loadingEstudiantes } = useEstudiantes();
     console.log("estudiantes", estudiantes);
     const [cursoId, setCursoId] = useState<string | null>(null);
+    const [openDialog, setOpenDialog] = useState(false);
 
     const {
         handleSubmit,
@@ -150,6 +161,7 @@ export function CrearInscripcionForm() {
                                         control={control}
                                         render={({ field }) => (
                                             <Select
+                                                className="flex-1"
                                                 options={estudianteOptions}
                                                 value={estudianteOptions.filter((option: any) => field.value.includes(option.value))}
                                                 onChange={(option) => {
@@ -164,7 +176,7 @@ export function CrearInscripcionForm() {
                                             />
                                         )}
                                     />
-                                    <Button type="button" variant="outline" size="icon">
+                                    <Button type="button" variant="outline" size="icon" onClick={() => setOpenDialog(true)} className="cursor-pointer">
                                         <Plus className="size-4" />
                                     </Button>
                                 </div>
@@ -185,11 +197,11 @@ export function CrearInscripcionForm() {
                                         : "Crear Inscripción"}
                                 </Button>
                             </Field>
-
                         </FieldGroup>
                     </form>
                 </CardContent>
             </Card>
+            <DialogEstudiante open={openDialog} onOpenChange={setOpenDialog} />
         </div>
     );
 }

@@ -3,7 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
     MoreHorizontal,
-    Pencil,
     Trash2,
     Eye,
 } from "lucide-react";
@@ -23,18 +22,14 @@ import {
 import { UsuarioIndexType } from "../Schema/UsuarioSchema";
 
 interface UsuarioColumnsProps {
-    onEdit: (usuario: UsuarioIndexType) => void;
     onDelete: (id: string) => void;
     onView: (id: string) => void;
-    canEdit: boolean;
     canDelete: boolean;
 }
 
 export function UsuarioColumns({
-    onEdit,
     onDelete,
     onView,
-    canEdit,
     canDelete,
 }: UsuarioColumnsProps): ColumnDef<UsuarioIndexType>[] {
     return [
@@ -137,17 +132,6 @@ export function UsuarioColumns({
                                 <Eye className="mr-2 h-4 w-4" />
                                 Ver usuario
                             </DropdownMenuItem>
-
-                            {canEdit && (
-                                <DropdownMenuItem
-                                    onClick={() =>
-                                        onEdit(usuario)
-                                    }
-                                >
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    Editar
-                                </DropdownMenuItem>
-                            )}
 
                             {canDelete && (
                                 <DropdownMenuItem

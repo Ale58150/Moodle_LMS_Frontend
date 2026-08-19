@@ -1,4 +1,5 @@
 "use client";
+
 import {
     Dialog,
     DialogContent,
@@ -8,44 +9,61 @@ import {
 } from "@/components/ui/dialog";
 
 import { FormUsuario } from "./FormUsuario";
-import { UsuarioType } from "../Schema/UsuarioSchema";
+import { useGetUser } from "../Hook/UsuarioHook";
 
 interface DialogUsuarioProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     mode: "create" | "edit";
-    initialData?: UsuarioType;
+    userId?: string;
 }
 
 export function DialogUsuario({
     open,
     onOpenChange,
     mode,
-    initialData,
+    userId,
 }: DialogUsuarioProps) {
+    const {
+        data: userDetail,
+        isLoading,
+    } = useGetUser(userId ?? "");
+
     return (
         <Dialog
             open={open}
             onOpenChange={onOpenChange}
         >
-            <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-auto">
+            <DialogContent className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
                         {mode === "edit"
-                            ? "Editar Usuario"
-                            : "Nuevo Usuario"}
+                            ? "Editar usuario"
+                            : "Nuevo usuario"}
                     </DialogTitle>
+
                     <DialogDescription>
                         {mode === "edit"
-                            ? "Modifica los datos del usuario."
-                            : "Completa los datos para registrar un nuevo usuario."}
+                            ? "Modifica la información del usuario."
+                            : "Completa la información para registrar un nuevo usuario."}
                     </DialogDescription>
                 </DialogHeader>
-                <FormUsuario
-                    mode={mode}
-                    initialData={initialData}
-                    onSuccess={() => onOpenChange(false)}
-                />
+
+                {mode === "edit" && isLoading ? (
+                    <div className="py-10 text-center text-sm text-muted-foreground">
+                        Cargando información del usuario...
+                    </div>
+                ) : (
+                    <FormUsuario
+                        mode={mode}
+                        initialData={
+                            mode === "edit"
+                                ? userDetail
+                                : undefined
+                        }
+                        onSuccess={() => onOpenChange(false)}
+                    />
+                )}
             </DialogContent>
         </Dialog>
     );

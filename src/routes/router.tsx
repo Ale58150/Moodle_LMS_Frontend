@@ -9,6 +9,11 @@ import { ChangePassword } from "@/pages/Auth/ChangePassword";
 import { ProfilePage } from "@/pages/Auth/MeProfile";
 import UsuarioPage from "@/pages/Usuario/UsuarioPage";
 import UsuarioDetallePage from "@/pages/Usuario/UsuarioDetallePage";
+import CursosPage from "@/pages/Curso/CursoPage";
+import CursoDetallePage from "@/pages/Curso/CursoDetallePage";
+import ModulosPage from "@/pages/Modulo/ModuloPage";
+import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
+import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage"; // 👈 nuevo
 import { CrearInscripcionPage } from "@/pages/Inscripciones/CrearInscripcionPage";
 import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
 
@@ -48,22 +53,18 @@ export const router = createBrowserRouter([
                             </Suspense>
                         ),
                         children: [
+                            { path: "inicio", element: <Inicio /> },
+                            { path: "perfil", element: <ProfilePage /> },
+                            { path: "usuario", element: <UsuarioPage /> },
+                            { path: "usuario/:id", element: <UsuarioDetallePage /> },
+                            { path: "cursos", element: <CursosPage /> },
+                            { path: "cursos/:id", element: <CursoDetallePage /> },
+                            { path: "cursos/:id/modulos", element: <ModulosPage /> },
+                            { path: "cursos/:id/modulos/:moduloId", element: <ModuloDetallePage /> },
                             {
-                                path: "inicio",
-                                element: <Inicio />,
+                                path: "cursos/:id/modulos/:moduloId/lecciones/:leccionId", // 👈 nuevo
+                                element: <LeccionDetallePage />,
                             },
-                            {
-                                path: "perfil",
-                                element: <ProfilePage />
-                            },
-                            {
-                                path: "usuario",
-                                element: <UsuarioPage />
-                            },
-                            {
-                                path: "usuario/:id",
-                                element: < UsuarioDetallePage />
-                            }
                         ],
                     },
                 ],
