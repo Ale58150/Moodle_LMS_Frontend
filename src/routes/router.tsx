@@ -65,18 +65,12 @@ export const router = createBrowserRouter([
                                 path: "cursos/:id/modulos/:moduloId/lecciones/:leccionId", // 👈 nuevo
                                 element: <LeccionDetallePage />,
                             },
+                            { path: "inscripciones", element: <InscripcionesPage /> },
+                            { path: "inscripciones/crear", element: <CrearInscripcionPage /> },
                         ],
                     },
                 ],
             },
-            {
-                path: "inscripciones",
-                element: <InscripcionesPage />
-            },
-            {
-                path: "inscripciones/crear",
-                element: <CrearInscripcionPage />
-            }
         ],
     },
 ]);
