@@ -1,70 +1,177 @@
-import { useLocation } from "react-router-dom";
-import { useSidebar, SidebarTrigger } from "../ui/sidebar";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+    ChevronDown,
+    LogOut,
+    User,
+} from "lucide-react";
+
+import { SidebarTrigger } from "../ui/sidebar";
 import { ModeToggle } from "../ModeToggle";
 import { useAuthStore } from "@/store/authStore";
-import ButtonLogOut from "../Login/ButtonLogOut";
+
+import {
+    Avatar,
+    AvatarFallback,
+} from "../ui/avatar";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+
+import { Button } from "../ui/button";
 
 export const Headerbar = () => {
     const location = useLocation();
-    const { state, isMobile } = useSidebar();
+    const navigate = useNavigate();
 
-    // Leemos el estado verídico directamente de tu store global
     const usuario = useAuthStore((state) => state.usuario);
-    const rol = useAuthStore((state) => state.rol);
+    const logout = useAuthStore((state) => state.logout);
 
-    // Formateamos el nombre completo del usuario de forma segura
-    const fullName = usuario?.nombre && usuario?.apellido_paterno
-        ? `${usuario.nombre} ${usuario.apellido_paterno}`
-        : "Usuario";
+    const fullName = "Usuario";
 
-    // Generamos las iniciales para el avatar minimalista
-    const initials = usuario?.nombre && usuario?.apellido_paterno
-        ? `${usuario.nombre[0]}${usuario.apellido_paterno[0]}`.toUpperCase()
-        : "U";
+    const initials = "U";
 
-    // Mapeamos el nombre de la página según la ruta actual en el navegador
+    const email = usuario?.correo || "Sin correo";
+
     const getPageTitle = () => {
         const path = location.pathname;
+
         if (path.endsWith("/inicio")) return "Inicio";
         if (path.endsWith("/usuarios")) return "Gestión de Usuarios";
         if (path.endsWith("/cursos")) return "Gestión de Cursos";
         if (path.endsWith("/mis-cursos")) return "Mis Cursos";
         if (path.endsWith("/perfil")) return "Mi Perfil";
+
         return "Dashboard";
     };
 
+    const handleProfile = () => {
+        navigate("/perfil");
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login", { replace: true });
+    };
+
     return (
+        // sticky (no fixed): al ser hijo directo de SidebarInset, el propio
+        // layout flex del sidebar ya se encarga de correr/achicar este header
+        // cuando el sidebar pasa de expandido a modo icono. No hace falta
+        // calcular left/width a mano.
         <header
-            className={`
-                fixed top-0 z-20 flex items-center justify-between h-14 px-6 transition-all duration-300 ease-in-out                backdrop-blur-md
-                border-b border-border bg-background/80 ${state === "expanded" && !isMobile ? "w-[calc(100vw-16rem)] left-64" : "w-full left-0"}            `}
+            className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6"
         >
-            <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-muted-foreground hover:text-primary transition-colors h-9 w-9" />
-                <div className="h-4 w-[1px] bg-border hidden sm:block" />
-                <h1 className="hidden sm:block text-sm font-semibold tracking-tight text-foreground">
-                    {getPageTitle()}
-                </h1>
-            </div>
             <div className="flex items-center gap-3">
-                <div className="flex items-center gap-3 px-3 py-1.5 rounded-xl border border-border/40 bg-muted/30 dark:bg-neutral-900/40">
-                    <div className="w-7 h-7 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center text-xs font-bold uppercase tracking-wider">
-                        {initials}
-                    </div>
-                    <div className="flex flex-col text-left justify-center">
-                        <span className="text-xs font-bold text-foreground leading-none">
-                            {fullName}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider mt-0.5 leading-none">
-                            {rol || "Invitado"}
-                        </span>
-                    </div>
+                <SidebarTrigger
+                    className="h-9 w-9 text-muted-foreground transition-colors hover:text-primary"
+                />
+
+                <div className="hidden h-5 w-px bg-border sm:block" />
+
+                <div className="hidden sm:block">
+                    <h1 className="text-sm font-semibold tracking-tight text-foreground">
+                        {getPageTitle()}
+                    </h1>
                 </div>
             </div>
+
             <div className="flex items-center gap-2">
                 <ModeToggle />
-                <div className="h-4 w-[1px] bg-border mx-1" />
-                <ButtonLogOut />
+                <div className="mx-1 hidden h-5 w-px bg-border sm:block" />
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            className="h-10 gap-2 rounded-xl px-2 hover:bg-muted/70 focus-visible:ring-1 focus-visible:ring-primary"
+                        >
+                            <Avatar className="h-8 w-8 border border-primary/20">
+                                <AvatarFallback
+                                    className="bg-primary/10 text-xs font-bold tracking-wider text-primary"
+                                >
+                                    {initials}
+                                </AvatarFallback>
+                            </Avatar>
+
+                            <div className="hidden flex-col items-start md:flex">
+                                <span
+                                    className="max-w-[180px] truncate text-xs font-semibold leading-tight text-foreground"
+                                >
+                                    {fullName}
+                                </span>
+
+                                <span
+                                    className="max-w-[180px] truncate text-[10px] leading-tight text-muted-foreground"
+                                >
+                                    {email}
+                                </span>
+                            </div>
+
+                            <ChevronDown
+                                className="hidden h-4 w-4 text-muted-foreground transition-transform sm:block"
+                            />
+                        </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent
+                        align="end"
+                        sideOffset={8}
+                        className="w-64 rounded-xl p-2"
+                    >
+
+                        <DropdownMenuLabel className="px-3 py-3">
+                            <div className="flex items-center gap-3">
+                                <Avatar className="h-10 w-10 border border-primary/20">
+                                    <AvatarFallback
+                                        className="bg-primary/10 font-bold text-primary"
+                                    >
+                                        {initials}
+                                    </AvatarFallback>
+                                </Avatar>
+
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-sm font-semibold text-foreground">
+                                        {fullName}
+                                    </p>
+
+                                    <p className="truncate text-xs text-muted-foreground">
+                                        {email}
+                                    </p>
+                                </div>
+                            </div>
+                        </DropdownMenuLabel>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem
+                                onClick={handleProfile}
+                                className="cursor-pointer rounded-lg py-2.5"
+                            >
+                                <User className="mr-2 h-4 w-4" />
+
+                                <span>Ver mi perfil</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                            onClick={handleLogout}
+                            className="cursor-pointer rounded-lg py-2.5 text-red-500 focus:bg-red-500/10 focus:text-red-500"
+                        >
+                            <LogOut className="mr-2 h-4 w-4" />
+
+                            <span>Cerrar sesión</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </header>
     );
