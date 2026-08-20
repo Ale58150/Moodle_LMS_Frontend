@@ -19,6 +19,7 @@ import { Plus } from "lucide-react";
 import {
     CrearInscripcionSchema,
     CrearInscripcionSchemaType,
+    CursoType,
 } from "../Schema/InscripcionSchema";
 import {
     useCrearInscripcion,
@@ -26,6 +27,7 @@ import {
     useEstudiantes,
 } from "../Hook/InscripcionHook";
 import { DialogEstudiante } from "./DialogEstudiante";
+import { EstudianteType } from "../Schema/EstudianteSchema";
 
 export function CrearInscripcionForm() {
     const crearInscripcionMutation = useCrearInscripcion();
@@ -51,19 +53,19 @@ export function CrearInscripcionForm() {
     });
 
     const cursoSeleccionado = cursos.find(
-        (curso: any) => curso.id === cursoId
+        (curso: CursoType) => curso.id === cursoId
     );
 
     const modulos = cursoSeleccionado?.modulos ?? [];
-    const cursoOptions = cursos.map((curso: any) => ({
+    const cursoOptions = cursos.map((curso: CursoType) => ({
         value: curso.id,
         label: curso.nombre,
     }));
-    const moduloOptions = modulos.map((modulo: any) => ({
+    const moduloOptions = modulos.map((modulo: CursoType) => ({
         value: modulo.id,
         label: modulo.nombre,
     }));
-    const estudianteOptions = estudiantes.map((estudiante: any) => ({
+    const estudianteOptions = estudiantes.map((estudiante: EstudianteType) => ({
         value: estudiante.id,
         label: estudiante.username,
     }));
