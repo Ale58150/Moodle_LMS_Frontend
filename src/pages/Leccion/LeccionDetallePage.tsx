@@ -10,6 +10,7 @@ import { RecursoViewer } from "@/features/Leccion/Components/RecursoViewer";
 import { LeccionCheckpointForm } from "@/features/Leccion/Components/LeccionCheckpointForm";
 import { LeccionesTimeline } from "@/features/Leccion/Components/LeccionesTimeline";
 import { LeccionBloqueadaDialog } from "@/features/Leccion/Components/LeccionBloqueadaDialog";
+import { ProgresoModulo } from "@/features/Progreso/Components/ProgresoModulo";
 import { useGetLeccion, useGetLeccionesConProgreso } from "@/features/Leccion/Hook/LeccionHook";
 
 export default function LeccionDetallePage() {
@@ -86,7 +87,7 @@ function LeccionContenido({
     const contenidoSeguro = leccion.contenidoHtml ? DOMPurify.sanitize(leccion.contenidoHtml) : null;
 
     return (
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:min-h-[calc(100vh-200px)]">
             <div className="min-w-0 flex-1 space-y-6">
                 <h1 className="text-xl font-bold tracking-tight sm:text-2xl">{leccion.nombre}</h1>
 
@@ -122,8 +123,11 @@ function LeccionContenido({
                 />
             </div>
 
-            <aside className="w-full shrink-0 lg:w-80">
-                <LeccionesTimeline moduloId={moduloId} />
+            <aside className="w-full shrink-0 lg:w-80 lg:sticky lg:top-6 lg:self-start lg:max-h-[calc(100vh-100px)] lg:overflow-y-auto">
+                <div className="space-y-4">
+                    <LeccionesTimeline moduloId={moduloId} />
+                    <ProgresoModulo moduloId={moduloId} />
+                </div>
             </aside>
         </div>
     );
