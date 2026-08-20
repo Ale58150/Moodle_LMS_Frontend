@@ -66,27 +66,27 @@ export function InscripcionColumns({
       },
     },
 
-    {
-      accessorKey: "estadoAcceso",
-      header: "Estado de acceso",
-      cell: ({ row }) => {
-        const estado = row.original.estadoAcceso.toLowerCase();
+    // {
+    //   accessorKey: "estadoAcceso",
+    //   header: "Estado de acceso",
+    //   cell: ({ row }) => {
+    //     const estado = row.original.estadoAcceso.toLowerCase();
 
-        return (
-          <Badge
-            variant={
-              estado === "habilitado"
-                ? "default"
-                : estado === "pendiente"
-                  ? "secondary"
-                  : "destructive"
-            }
-          >
-            {row.original.estadoAcceso}
-          </Badge>
-        );
-      },
-    },
+    //     return (
+    //       <Badge
+    //         variant={
+    //           estado === "habilitado"
+    //             ? "default"
+    //             : estado === "pendiente"
+    //               ? "secondary"
+    //               : "destructive"
+    //         }
+    //       >
+    //         {row.original.estadoAcceso}
+    //       </Badge>
+    //     );
+    //   },
+    // },
 
     {
       id: "actions",
