@@ -3,16 +3,16 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { FormEstudiante } from "./FormEstudiante";
+import { EstudianteFormType } from "../Schema/EstudianteSchema";
 
 interface DialogEstudianteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialData?: any;
+  initialData?: EstudianteFormType;
 }
 
 export function DialogEstudiante({

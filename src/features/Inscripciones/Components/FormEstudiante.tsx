@@ -1,6 +1,5 @@
 import {
   Field,
-  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
@@ -8,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCreateEstudiante } from "../Hook/EstudiantesHook";
 import { Controller, useForm } from "react-hook-form";
+import { CrearEstudianteSchemaType, EstudianteFormType } from "../Schema/EstudianteSchema";
 
 interface FormEstudianteProps {
-  initialData?: any;
+  initialData?: CrearEstudianteSchemaType;
   onSuccess: () => void;
 }
 
@@ -18,8 +18,8 @@ export function FormEstudiante({
   initialData,
   onSuccess,
 }: FormEstudianteProps) {
-  const { mutate: createEstudiante, isPending: creating, } = useCreateEstudiante();
-  const form = useForm<any>({
+  const { mutate: createEstudiante } = useCreateEstudiante();
+  const form = useForm<EstudianteFormType>({
     defaultValues: initialData || {
       nombre: "",
       correo: "",
@@ -28,7 +28,7 @@ export function FormEstudiante({
     },
   });
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: CrearEstudianteSchemaType) => {
     createEstudiante(values, {
       onSuccess: () => {
         form.reset();
