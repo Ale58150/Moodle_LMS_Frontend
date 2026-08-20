@@ -26,10 +26,7 @@ export default function AppSidebar() {
                 return true;
             }
 
-            return backendMenu.some(
-                (backendItem) =>
-                    backendItem.ruta === localItem.url
-            );
+            return backendMenu;
         }
     );
 

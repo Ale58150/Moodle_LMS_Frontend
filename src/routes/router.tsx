@@ -14,6 +14,8 @@ import CursoDetallePage from "@/pages/Curso/CursoDetallePage";
 import ModulosPage from "@/pages/Modulo/ModuloPage";
 import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
 import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage";
+import { CrearInscripcionPage } from "@/pages/Inscripciones/CrearInscripcionPage";
+import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -63,6 +65,8 @@ export const router = createBrowserRouter([
                                 path: "cursos/:id/modulos/:moduloId/lecciones/:leccionId", // 👈 nuevo
                                 element: <LeccionDetallePage />,
                             },
+                            { path: "inscripciones", element: <InscripcionesPage /> },
+                            { path: "inscripciones/crear", element: <CrearInscripcionPage /> },
                         ],
                     },
                 ],

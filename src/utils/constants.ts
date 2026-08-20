@@ -29,7 +29,12 @@ export const PERMISSIONS = {
         EDITAR: "formularios.editar",
         ELIMINAR: "formularios.eliminar",
     },
-
+    INSCRIPCIONES: {
+        VER: "inscripciones.ver",
+        CREAR: "inscripciones.crear",
+        EDITAR: "inscripciones.editar",
+        ELIMINAR: "inscripciones.eliminar",
+    },
 
 
 
