@@ -6,10 +6,8 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { useCreateEstudiante } from "../Hook/EstudiantesHook";
 import { Controller, useForm } from "react-hook-form";
-import { CrearEstudianteSchema } from "../Schema/EstudianteSchema";
 
 interface FormEstudianteProps {
   initialData?: any;
@@ -29,11 +27,6 @@ export function FormEstudiante({
       apellidoMaterno: "",
     },
   });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    form.setValue(name, value);
-  };
 
   const onSubmit = (values: any) => {
     createEstudiante(values, {

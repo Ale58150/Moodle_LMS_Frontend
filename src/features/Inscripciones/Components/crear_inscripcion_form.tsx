@@ -12,18 +12,9 @@ import {
 } from "@/components/ui/card";
 import {
     Field,
-    FieldError,
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import {
     CrearInscripcionSchema,
