@@ -47,7 +47,7 @@ export const InscripcionesPage = () => {
       <section className="flex">
         <h1 className="text-2xl font-bold">Inscripciones</h1>
         <Button onClick={() => {
-          window.location.href = "/inscripciones/crear";
+          navigate("/inscripciones/crear");
         }}>Crear Inscripción</Button>
       </section>
       <QueryState isLoading={isLoading} isError={isError} error={error}>
