@@ -3,19 +3,20 @@ import {
     faUsersGear,
     faBook,
     faGraduationCap,
+    faIdBadge,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const menuItems = [
     {
         title: "Inicio",
         icon: faHouse,
-        url: "/",
+        url: "/inicio",
         roles: ["administrador", "estudiante"],
     },
     {
         title: "Usuarios",
         icon: faUsersGear,
-        url: "/usuarios",
+        url: "/usuario",
         roles: ["administrador"],
     },
     {
@@ -32,7 +33,7 @@ export const menuItems = [
     },
     {
         title: "Inscripciones",
-        icon: faGraduationCap,
+        icon: faIdBadge,
         url: "/inscripciones",
         roles: ["administrador"],
     }
