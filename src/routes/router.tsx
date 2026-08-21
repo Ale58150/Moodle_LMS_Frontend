@@ -16,15 +16,12 @@ import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
 import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage";
 import { CrearInscripcionPage } from "@/pages/Inscripciones/CrearInscripcionPage";
 import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
+import InicioPage from "@/pages/Welcome/InicioPage";
+import { RouteErrorBoundary } from "@/components/common/app/Routeerrorboundary";
 
 const Loading = () => <div>Cargando...</div>;
 
-const Inicio = () => (
-    <div className="p-6">
-        <h1 className="text-3xl font-bold">Inicio</h1>
-        <p>Página de prueba.</p>
-    </div>
-);
+
 
 export const router = createBrowserRouter([
     {
@@ -52,8 +49,9 @@ export const router = createBrowserRouter([
                                 <DashboardLayout />
                             </Suspense>
                         ),
+                        errorElement: <RouteErrorBoundary />,
                         children: [
-                            { path: "inicio", element: <Inicio /> },
+                            { path: "inicio", element: <InicioPage /> },
                             { path: "perfil", element: <ProfilePage /> },
                             { path: "usuario", element: <UsuarioPage /> },
                             { path: "usuario/:id", element: <UsuarioDetallePage /> },
